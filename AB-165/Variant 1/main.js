@@ -6,62 +6,35 @@
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials*
 // @require      file://C:\Users\1442718\Development\overrides\AB-165\Variant 1\main.js
+// @grant        GM_addStyle
 // ==/UserScript==
 
-// console.log("***** AB-165  ******");
+console.log("***** AB-165!!  ******");
 
 document.documentElement.dataset.webAb165 = "1";
 
 window.ab165 = window.ab165 || {};
 
+GM_addStyle(`
+  .carousel-list cdx-carousel2-item:nth-child(1) cdx-card a img {
+    --image-src: url("https://placehold.co/386x232");
+    content: var(--image-src);
+  }
+`);
+
 window.ab165.dynamic =
   window.ab165.dynamic ||
   (() => {
     new MutationObserver((mutationList, observer) => {
-      if (!location.pathname.startsWith("/shop/specials"))
+      if (!location.pathname.startsWith("/shop/specials")) {
         return observer.disconnect();
+      }
       // Stop observing and start making changes here.
+
+      const carouselCard = document.querySelector('.carousel-list cdx-carousel2-item:nth-child(1) cdx-card');
+      console.log("🚀 ~ newMutationObserver ~ carouselList:", carouselList)
+
       observer.disconnect();
-
-      const productCards = document.querySelectorAll(
-        "cdx-card.card.ng-star-inserted"
-      );
-
-      productCards.forEach((card) => {
-        const strapLine = card.querySelector(".productStrap-text");
-        const priceWas = card.querySelector(".price--was");
-        const priceSave = card.querySelector(".price--save");
-        const fullPrice = priceWas && priceWas.textContent.match("\\$(.*)");
-        const savedPrice = priceSave && priceSave.textContent.match("\\$(.*)");
-        let percentage = 0;
-
-        if (fullPrice !== null && savedPrice !== null) {
-          percentage = Math.round(
-            (Number(savedPrice[1]) / Number(fullPrice[1])) * 100
-          );
-        } else {
-          const priceTags = card.querySelectorAll(".price--was");
-          const presentPriceEl = card.querySelector(".presentPrice");
-          const presentPrice = presentPriceEl.ariaLabel;
-          const nonMemberPrice =
-            priceTags[1] && priceTags[1].textContent.match("\\$(.*)");
-          const price = presentPrice.match(/\$([\d.]+)/)[1];
-
-          if (nonMemberPrice && price) {
-            percentage =
-              100 -
-              Math.round((Number(price) / Number(nonMemberPrice[1])) * 100);
-          }
-        }
-
-        if (
-          (strapLine.textContent.startsWith("Save") ||
-            strapLine.textContent === "") &&
-          percentage !== 0
-        ) {
-          strapLine.textContent = `${percentage}% Off`;
-        }
-      });
 
       observer.observe(document.body, {
         childList: true,

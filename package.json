@@ -1,0 +1,18 @@
+{
+  "name": "pdo-experiments",
+  "version": "1.0.0",
+  "description": "AB Tests for PDO team",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "node script.js"
+  },
+  "keywords": [],
+  "author": "Wilson Espina",
+  "license": "ISC",
+  "dependencies": {
+    "@inquirer/prompts": "^5.3.0",
+    "commander": "^12.1.0"
+  }
+}
