@@ -1,0 +1,46 @@
+// document.documentElement.dataset.webAb164 = "1";
+
+// window.addEventListener('load', () => {
+
+    console.log('LOADED')
+
+    const productGrid = document.querySelector('product-grid')
+    const productCards = document.querySelectorAll('cdx-card.card.ng-star-inserted');
+
+    productCards.forEach(card => {
+        const strapLine = card.querySelector('.productStrap-text');
+        const priceWas = card.querySelector('.price--was');
+        const priceSave = card.querySelector('.price--save');
+        const fullPrice = priceWas && priceWas.textContent.match('\\$(.*)');
+        const savedPrice = priceSave && priceSave.textContent.match('\\$(.*)');
+        let percentage = 0;
+        let strapLineText = '';
+
+        console.log('priceSave>>>', priceSave.textContent)
+
+        if (priceSave && priceSave.textContent.startsWith('Save')) {
+            strapLineText = priceSave.textContent;
+
+            console.log('strapLineText>>>',savedPrice, strapLineText)
+        }
+
+        // if (fullPrice !== null && savedPrice !== null) {
+        //     percentage = Math.round(Number(savedPrice[1]) / Number(fullPrice[1]) * 100);
+        // } else {
+        //     const priceTags = card.querySelectorAll('.price--was');
+        //     const presentPriceEl = card.querySelector('.presentPrice');
+        //     const presentPrice = currentPriceEl.ariaLabel;
+        //     const nonMemberPrice = priceTags[1] && priceTags[1].textContent.match('\\$(.*)');
+        //     const price = presentPrice.match(/\$([\d.]+)/)[1];
+
+        //     if (nonMemberPrice && price) {
+        //         percentage = 100 - (Math.round(Number(price) / Number(nonMemberPrice[1]) * 100));
+        //     }
+        // }
+
+        if ((strapLine.textContent.startsWith('Save') || strapLine.textContent === '') && percentage !== 0) {
+            strapLine.textContent = `${percentage}% Off`
+        }
+    })
+
+// }, false);

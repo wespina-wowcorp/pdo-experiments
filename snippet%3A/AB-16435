@@ -1,0 +1,26 @@
+const productGrid = document.querySelector('product-grid')
+const productCards = document.querySelectorAll('cdx-card.card.ng-star-inserted');
+
+productCards.forEach(card=>{
+    const strapLine = card.querySelector('.productStrap-text');
+    const priceWas = card.querySelector('.price--was');
+    const priceSave = card.querySelector('.price--save');
+    const fullPrice = priceWas?.textContent.match('\\$(.*)')?.[1] ?? null;
+    const savedPrice = priceSave?.textContent.match('\\$(.*)')?.[1] ?? null;
+    let percentage = 0;
+
+    if (fullPrice !== null && savedPrice !== null) {
+
+                console.log('fullPrice ', fullPrice)
+               console.log('savedPrice ', savedPrice) 
+        percentage = Math.round(Number(savedPrice) / Number(fullPrice) * 100);
+    } else {
+        console.log('fullPrice ', fullPrice)
+               console.log('savedPrice ', savedPrice) 
+    }
+
+    if (strapLine?.textContent?.startsWith('Save')) {
+        strapLine.textContent = `${percentage}% Off`
+    }
+}
+)

@@ -1,0 +1,19 @@
+console.log('<<<<< override >>>>')
+
+const productGrid = document.querySelector('product-grid')
+const productCards = document.querySelectorAll('cdx-card.card.ng-star-inserted');
+
+// console.log('productGrid>', productGrid)
+// console.log('>> productCards >>>', productCards)
+
+productCards.forEach(card=>{
+    const strapLine = card.querySelector('.productStrap-text');
+    const fullPrice = card.querySelector('.price--was')
+
+    console.log('REGEX>>', fullPrice.textContent.match('\\$(.*)'))
+
+    if (strapLine?.textContent?.startsWith('Save')) {
+        console.log('>>strapLine ', strapLine.textContent)
+    }
+}
+)

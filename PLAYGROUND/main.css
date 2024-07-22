@@ -1,0 +1,8 @@
+product-content-in-grid figure > img {
+  --image-src: url("https://www.woolworths.co.nz/Content/Banners/F2503-CIGCM-InSeasonWinter-Potato.jpg");
+  content: var(--image-src);
+
+  @media screen and (min-width: 640px) {
+    --image-src: url("https://www.woolworths.co.nz/Content/Banners/F2503-CIGCD-InSeasonWinter-Potato.jpg");
+  }
+}
