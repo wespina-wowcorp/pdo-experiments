@@ -32,7 +32,9 @@ window.ab165.dynamic =
       // Stop observing and start making changes here.
 
       const carouselCard = document.querySelector('.carousel-list cdx-carousel2-item:nth-child(1) cdx-card');
-      console.log("🚀 ~ newMutationObserver ~ carouselList:", carouselList)
+      console.log("🚀 ~ newMutationObserver ~ carouselList:", carouselCard)
+
+      // TODO - change URL link href
 
       observer.disconnect();
 

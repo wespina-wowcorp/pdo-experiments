@@ -1,11 +1,23 @@
 #!/usr/bin/env node
 
 import { input } from "@inquirer/prompts";
+import inquirer from 'inquirer';
 import fs from "node:fs";
+import colors from "colors";
 
-const testId = await input({ message: "Enter experiment id (e.g. AB-123)" });
+const LOG_MAGENTA = (text) => console.log(colors.magenta(text));
+
+const testId = await input({
+  message: "Enter experiment id (e.g. AB-123)",
+  required: true,
+});
 const numberOfVariants = await input({
   message: "Enter number of variants (not including Control)",
+  required: true,
+});
+
+const description = await input({
+  message: "Enter test description",
 });
 const variants = parseInt(numberOfVariants);
 
@@ -15,18 +27,21 @@ if (!variants || variants > MAX_ALLOWABLE_VARIANTS) {
   throw new Error("Invalid number of variants");
 }
 
-console.log("***** GENERATING FILES *******");
+LOG_MAGENTA("***** GENERATING FILES *******");
 
 const variantArray = [...Array(variants).keys()];
 
 variantArray.forEach((variant) => {
   // TODO - validation for AB test name (starts with AB)
+  // TODO - add colours
+  // TODO - More error handling
+  // TODO - Multiple prompts for @match https://www.npmjs.com/package/inquirer
   const variantNumber = variant + 1;
   const folderName = `${testId.trim()}/Variant-${variantNumber}`;
   const testNumber = testId.match(/AB-(.*)/)?.[1];
 
   if (!testNumber) {
-    throw new Error('Test ID must start with "AB-"')
+    throw new Error('Test ID must start with "AB-"');
   }
 
   const content = `
@@ -34,7 +49,7 @@ variantArray.forEach((variant) => {
   // @name         ${testId}: Variant ${variantNumber}
   // @namespace    https://woolworths-agile.atlassian.net/browse/${testId}
   // @version      ${testId}_variant_${variantNumber}
-  // @description  {{description}}
+  // @description  ${description}
   // @author       Wilson
   // @match        {{url_match}}
   // @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
@@ -53,4 +68,4 @@ variantArray.forEach((variant) => {
   }
 });
 
-console.log("***** OPERATION COMPLETE *******");
+LOG_MAGENTA("***** FILE GENERATED *******");
