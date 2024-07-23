@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-import { input } from "@inquirer/prompts";
-import inquirer from 'inquirer';
+import { input, confirm  } from "@inquirer/prompts";
 import fs from "node:fs";
 import colors from "colors";
 
@@ -11,14 +10,22 @@ const testId = await input({
   message: "Enter experiment id (e.g. AB-123)",
   required: true,
 });
+
 const numberOfVariants = await input({
   message: "Enter number of variants (not including Control)",
   required: true,
 });
 
 const description = await input({
-  message: "Enter test description",
+  message: "Enter test description (e.g. title of JIRA ticket)",
 });
+
+const urlMatch = await input({
+  message: "Enter URL for experiment",
+});
+
+const answer = await confirm({ message: 'Any more URLs?' });
+
 const variants = parseInt(numberOfVariants);
 
 const MAX_ALLOWABLE_VARIANTS = 10;
@@ -32,7 +39,6 @@ LOG_MAGENTA("***** GENERATING FILES *******");
 const variantArray = [...Array(variants).keys()];
 
 variantArray.forEach((variant) => {
-  // TODO - validation for AB test name (starts with AB)
   // TODO - add colours
   // TODO - More error handling
   // TODO - Multiple prompts for @match https://www.npmjs.com/package/inquirer
@@ -64,7 +70,7 @@ variantArray.forEach((variant) => {
       fs.writeFileSync(`${folderName}/main.js`, content);
     }
   } catch (err) {
-    console.error(err);
+    console.error("Error: ", err);
   }
 });
 
