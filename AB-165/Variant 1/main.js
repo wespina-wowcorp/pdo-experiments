@@ -9,18 +9,23 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log("***** AB-165!!  ******");
+// GM_addStyle(`
+//   .carousel-list cdx-carousel2-item:nth-child(1) cdx-card a img {
+//     --image-src: url("https://placehold.co/386x232");
+//     content: var(--image-src);
+//   }
+// `);
+
+console.log("***** AB-165  ******");
 
 document.documentElement.dataset.webAb165 = "1";
 
 window.ab165 = window.ab165 || {};
 
-GM_addStyle(`
-  .carousel-list cdx-carousel2-item:nth-child(1) cdx-card a img {
-    --image-src: url("https://placehold.co/386x232");
-    content: var(--image-src);
-  }
-`);
+const IMAGE_PLACEHOLDER = "https://placehold.co/386x232";
+const IMAGE_ALT_PLACEHOLDER = "Alt placeholder text";
+const LINK_1 = "https://www.woolworths.co.nz/shop/content/fathers-day";
+const LINK_2 = "https://www.woolworths.co.nz/shop/browse/father-s-day";
 
 window.ab165.dynamic =
   window.ab165.dynamic ||
@@ -29,19 +34,27 @@ window.ab165.dynamic =
       if (!location.pathname.startsWith("/shop/specials")) {
         return observer.disconnect();
       }
-      // Stop observing and start making changes here.
 
-      const carouselCard = document.querySelector('.carousel-list cdx-carousel2-item:nth-child(1) cdx-card');
-      console.log("🚀 ~ newMutationObserver ~ carouselList:", carouselCard)
+      const firstCarouselCard = document.querySelector(
+        ".carousel-list cdx-carousel2-item:nth-child(1) cdx-card"
+      );
 
-      // TODO - change URL link href
+      if (firstCarouselCard) {
+        const cardImage = firstCarouselCard.querySelector(":scope a img");
+        const cardLink = firstCarouselCard.querySelector(":scope a");
 
-      observer.disconnect();
+        if (cardLink && cardImage) {
+          cardImage.src = IMAGE_PLACEHOLDER;
+          cardImage.alt = IMAGE_ALT_PLACEHOLDER;
 
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
+          const url = new URL(cardLink.href);
+          const urlParams = new URLSearchParams(url.search).toString();
+          const updatedURL = `${LINK_1}?${urlParams}`;
+          cardLink.href = updatedURL;
+        }
+
+        observer.disconnect();
+      }
     }).observe(document.body, {
       childList: true,
       subtree: true,
