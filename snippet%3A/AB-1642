@@ -1,5 +1,0 @@
-console.log('<<<<< override >>>>')
-
-const productGrid = document.querySelectorAll('product-grid')
-
-console.log('productGrid>', productGrid)

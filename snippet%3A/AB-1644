@@ -1,7 +1,0 @@
-console.log('<<<<< override >>>>')
-
-const productGrid = document.querySelector('product-grid')
-const productCards = document.querySelectorAll('cdx-card');
-
-console.log('productGrid>', productGrid)
-console.log('>> productCards >>>', productCards)
