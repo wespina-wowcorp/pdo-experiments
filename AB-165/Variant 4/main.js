@@ -44,7 +44,7 @@ window.ab165.dynamic =
         const cardLink = firstCarouselCard.querySelector(":scope a");
         const cardTitle = firstCarouselCard.querySelector(":scope .article-title");
 
-        if (cardLink && cardImage && cardTitle) {
+        if (cardLink && cardImage && cardTitle && cardTitle.childNodes[0]) {
           cardImage.src = IMAGE_PLACEHOLDER;
           cardImage.alt = IMAGE_ALT_PLACEHOLDER;
 
@@ -52,7 +52,7 @@ window.ab165.dynamic =
           const urlParams = new URLSearchParams(url.search).toString();
           const updatedURL = `${LINK_1}?${urlParams}`;
           cardLink.href = updatedURL;
-          cardTitle.textContent = TITLE;
+          cardTitle.childNodes[0].textContent = TITLE;
         }
 
         observer.disconnect();
