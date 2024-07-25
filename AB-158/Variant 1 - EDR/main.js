@@ -68,22 +68,19 @@ window.ab158.dynamic =
 
         const boostsHeadingCopy = boostsSubheadingEl.cloneNode(true);
 
+        const boostsContainer = boostsSection.querySelector(":scope > section");
+        const moreBoostsContainer =
+          moreBoostsSection.querySelector(":scope > section");
+
         // swap background colours
+        if (!isBoostsPage && boostsContainer && moreBoostsContainer) {
+          boostsContainer.style.backgroundColor =
+            "var(--color-secondary--white)";
+          moreBoostsContainer.style.backgroundColor =
+            "var(--color-secondary--light-grey)";
+        }
 
-        moreBoostsSection.style.setProperty(
-          "background-color",
-          "--color-secondary--light-grey"
-        );
-        boostsSection.style.setProperty(
-          "background-color",
-          "--color-secondary--white"
-        );
-
-        console.log("🚀 ~ newMutationObserver ~ moreBoostsSection:", moreBoostsSection)
-
-        //background-color: var(--color-secondary--light-grey);
-        //background-color: var(--color-primary--white);
-
+        // swap headings and cts
         if (moreBoostsHeadingEl && boostsHeadingEl) {
           moreBoostsHeadingEl.textContent = boostsHeadingEl.textContent;
           boostsHeadingEl.style.display = "none";
