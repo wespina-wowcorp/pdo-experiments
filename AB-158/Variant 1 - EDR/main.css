@@ -1,4 +1,9 @@
-html:not(#ab158)[data-web-ab158="1"] edr-dc-dynamic-content edr-section:nth-of-type(2) section {
-    background-color: blue 
+html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(2) > section
+{
+  background-color: var(--color-secondary--light-grey) !important;
 }
-  
+
+html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(3) > section
+{
+  background-color: var(--color-secondary--white) !important;
+}

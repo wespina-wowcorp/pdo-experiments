@@ -18,8 +18,6 @@ document.documentElement.dataset.webAb158 = "1";
 
 window.ab158 = window.ab158 || {};
 
-const isBoostsPage = location.pathname.startsWith("/boosts");
-
 window.ab158.dynamic =
   window.ab158.dynamic ||
   (() => {
@@ -30,6 +28,8 @@ window.ab158.dynamic =
       ) {
         return observer.disconnect();
       }
+
+      const isBoostsPage = location.pathname.startsWith("/boosts");
 
       const edrGridContainer = document.querySelector(
         "edr-dc-dynamic-content:has(> edr-section)"
@@ -111,3 +111,15 @@ try {
 } catch (error) {
   console.error("ab158:", error);
 }
+
+GM_addStyle(`
+  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"], link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(2) > section,
+  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"], link[href="https://www-uat.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(2) > section {
+    background-color: var(--color-secondary--light-grey) !important;
+  }
+
+  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(3) > section,
+  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www-uat.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(3) > section {
+    background-color: var(--color-secondary--white) !important;
+  }
+`);

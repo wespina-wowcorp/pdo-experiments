@@ -17,11 +17,18 @@ window.ab158.dynamic =
   window.ab158.dynamic ||
   (() => {
     new MutationObserver((mutationList, observer) => {
-      if (!location.pathname.startsWith("/boosts")) {
+      if (
+        !location.pathname.startsWith("/boosts") &&
+        location.pathname !== "/"
+      ) {
         return observer.disconnect();
       }
 
-      const edrGridContainer = document.querySelector("edr-dc-dynamic-content");
+      const isBoostsPage = location.pathname.startsWith("/boosts");
+
+      const edrGridContainer = document.querySelector(
+        "edr-dc-dynamic-content:has(> edr-section)"
+      );
 
       const boostsSection = document.querySelector(
         "edr-dc-dynamic-content edr-section:nth-of-type(2)"
@@ -32,46 +39,56 @@ window.ab158.dynamic =
       );
 
       if (boostsSection && moreBoostsSection) {
-        const boostsHeadingEl = boostsSection.querySelector('edr-heading h3');
-        const boostsSubheadingEl = boostsSection.querySelector('edr-contentful-rich-text p');
-        const ctaContainer = boostsSection.querySelector('edr-app-container');
-        const moreBoostsHeadingEl = moreBoostsSection.querySelector('edr-heading h3');
-        const moreBoostsSubheadingEl = moreBoostsSection.querySelector('edr-contentful-rich-text p');
-        let container = moreBoostsSection.querySelector('section .section__content edr-app-boost-offers-grid > div');
+        const boostsHeadingEl = boostsSection.querySelector(
+          ":scope edr-heading h3"
+        );
 
+        const boostsSubheadingEl = boostsSection.querySelector(
+          "edr-contentful-rich-text p"
+        );
 
+        const ctaContainer = boostsSection.querySelector(
+          ":scope edr-app-container"
+        );
+        const moreBoostsHeadingEl = moreBoostsSection.querySelector(
+          ":scope edr-heading h3"
+        );
+        const moreBoostsSubheadingEl = moreBoostsSection.querySelector(
+          ":scope edr-contentful-rich-text p"
+        );
+
+        const container = moreBoostsSection.querySelector(
+          ":scope section .section__content edr-app-boost-offers-grid > div"
+        );
+
+        const boostsHeadingCopy = boostsSubheadingEl.cloneNode(true);
+
+        // swap headings and cta
         if (moreBoostsHeadingEl && boostsHeadingEl) {
           moreBoostsHeadingEl.textContent = boostsHeadingEl.textContent;
-          boostsHeadingEl.style.display = 'none';
+          boostsHeadingEl.style.display = "none";
         }
         if (moreBoostsSubheadingEl && boostsSubheadingEl) {
           moreBoostsSubheadingEl.textContent = boostsSubheadingEl.textContent;
-          boostsSubheadingEl.style.display = 'none';
+        }
+        if (boostsSubheadingEl) {
+          boostsSubheadingEl.style.display = "none";
         }
         if (container && ctaContainer) {
           container.append(ctaContainer);
+
+          if (!isBoostsPage) {
+            container.prepend(boostsHeadingCopy);
+            ctaContainer.style.display = "none";
+          }
         }
       }
 
-      // TODO - confirm what this no boosts section looks like
-      const noBoostsSection = document.querySelector(
-        "section:has(edr-no-boost-offers)"
-      );
-
-      const topSection = noBoostsSection || boostsSection;
-
-      if (edrGridContainer && topSection) {
-
-        edrGridContainer.insertBefore(moreBoostsSection, topSection);
+      if (edrGridContainer && boostsSection) {
+        edrGridContainer.insertBefore(moreBoostsSection, boostsSection);
 
         return observer.disconnect();
       }
-
-      // Finish making changes and resume observing here.
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
     }).observe(document.body, {
       childList: true,
       subtree: true,
