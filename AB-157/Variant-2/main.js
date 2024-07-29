@@ -8,6 +8,8 @@
 // @require      file://C:/Users/1442718/Development/overrides/AB-157/Variant-2/main.js
 // ==/UserScript==
 
+// const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8];
+
 document.documentElement.dataset.webAb157 = "2";
 
 window.ab157 = window.ab157 || {};
@@ -22,25 +24,22 @@ function shuffleArray(array) {
   return array;
 }
 
-function randomiseArrayAtPositions(array, randomisedPositions) {
+function randomiseArrayAtPositions(array, randomisedPositions, shouldShuffle = true) {
   if (!array) return;
   const newArray = [...array];
   const itemsToShuffle = randomisedPositions.map((pos) => newArray[pos]);
-  const shuffledItems = shuffleArray(itemsToShuffle);
-  // Place the shuffled items back into the original array
-  randomisedPositions.forEach((pos, index) => {
-    newArray[pos] = shuffledItems[index];
-  });
 
-  return newArray;
-}
+  if (shouldShuffle) {
+    const shuffledItems = shuffleArray(itemsToShuffle);
+    // Place the shuffled items back into the original array
+    randomisedPositions.forEach((pos, index) => {
+      newArray[pos] = shuffledItems[index];
+    });
+    return newArray;
 
-
-function shuffleItemsWithReferences(items, shuffledArray) {
-  if (!items) return;
-
-  const shuffledItems = shuffledArray.map((pos) => items[pos]);
-  return shuffledItems;
+  } else {
+    return itemsToShuffle
+  }
 }
 
 window.ab157.dynamic =
@@ -59,7 +58,7 @@ window.ab157.dynamic =
       );
 
       if (heroCarousel) {
-        const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8]; // CHANGE THIS FOR DIFFERENT VARIATION
+        const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8];// CHANGE THIS FOR DIFFERENT VARIATION
         const ORIGINAL_POSITIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
         let shuffledArray = randomiseArrayAtPositions(ORIGINAL_POSITIONS, RANDOMISED_POSITIONS);
@@ -71,7 +70,7 @@ window.ab157.dynamic =
           localStorage.setItem("carouselOrder", shuffledArray);
         }
 
-        const shuffledCarouselItems = shuffleItemsWithReferences(heroCarouselItems, shuffledArray);
+        const shuffledCarouselItems = randomiseArrayAtPositions(heroCarouselItems, shuffledArray, false);
 
         heroCarouselItems.forEach((item, index) => {
           let nodesFragment = document.createDocumentFragment();
@@ -100,6 +99,3 @@ try {
 } catch (error) {
   console.error("ab157:", error);
 }
-
-
-// const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8];
