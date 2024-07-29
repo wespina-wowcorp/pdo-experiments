@@ -13,6 +13,8 @@ document.documentElement.dataset.webAb157 = "1";
 
 window.ab157 = window.ab157 || {};
 
+const carouselOrder = localStorage.getItem("carouselOrder");
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -36,7 +38,7 @@ function randomiseArrayAtPositions(array, randomisedPositions) {
 
 window.ab157.dynamic =
   window.ab157.dynamic ||
-  (() => {
+  ((carouselOrder) => {
     new MutationObserver((_, observer) => {
       if (location.pathname !== "/") {
         return observer.disconnect();
@@ -52,10 +54,12 @@ window.ab157.dynamic =
       if (heroCarousel) {
         // const FIXED_POSITIONS = [0, 1, 3, 5, 8];
         const RANDOMISED_POSITIONS = [2, 4, 6, 7];
-        const shuffledCarouselItems = randomiseArrayAtPositions(
+        const shuffledCarouselItems = carouselOrder || randomiseArrayAtPositions(
           heroCarouselItems,
           RANDOMISED_POSITIONS
         );
+
+
 
         heroCarouselItems.forEach((item, index) => {
           let nodesFragment = document.createDocumentFragment();
@@ -79,7 +83,7 @@ try {
     // This happens when the experiment loads before the web page finishes loading.
     document.addEventListener("DOMContentLoaded", window.ab157.dynamic);
   } else {
-    window.ab157.dynamic();
+    window.ab157.dynamic(carouselOrder);
   }
 } catch (error) {
   console.error("ab157:", error);
