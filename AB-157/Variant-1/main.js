@@ -5,7 +5,7 @@
 // @description  Randomize Homepage Banner
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/
-// @require      file://C:/Users/1442718/Development/overrides/AB-157/Variant-1/main.js
+// @require      file:///Users/wilsonespina/Development/woolworths/pdo-experiments/AB-157/Variant-1/main.js
 // ==/UserScript==
 
 console.log(">>>> AB-157 >>>>");
@@ -36,6 +36,17 @@ function randomiseArrayAtPositions(array, randomisedPositions) {
   return newArray;
 }
 
+
+function shuffleItemsWithReferences(items, shuffledArray) {
+  if (!items) return;
+
+  const ORIGINAL_POSITIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  const shuffledPositions = [0, 1, 7, 3, 6, 5, 2, 4, 8];
+
+  const shuffledItems = shuffledArray.map((pos) => items[pos]);
+  return shuffledItems;
+}
+
 window.ab157.dynamic =
   window.ab157.dynamic ||
   ((carouselOrder) => {
@@ -52,14 +63,20 @@ window.ab157.dynamic =
       );
 
       if (heroCarousel) {
-        // const FIXED_POSITIONS = [0, 1, 3, 5, 8];
+        // const FIXED_POSITIONS = [0, 1, 3, 5, 8]; // 0 and 8 are non-visible elements that must remain fixed
         const RANDOMISED_POSITIONS = [2, 4, 6, 7];
-        const shuffledCarouselItems = carouselOrder || randomiseArrayAtPositions(
-          heroCarouselItems,
-          RANDOMISED_POSITIONS
-        );
+        const ORIGINAL_POSITIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
+        let shuffledArray = randomiseArrayAtPositions(ORIGINAL_POSITIONS, RANDOMISED_POSITIONS);
 
+        if (carouselOrder !== null && typeof carouselOrder === 'string') {
+          const carouselOrderArray = carouselOrder.split(',').map(Number);
+          shuffledArray = carouselOrderArray;
+        } else {
+          localStorage.setItem("carouselOrder", shuffledArray);
+        }
+
+        const shuffledCarouselItems = shuffleItemsWithReferences(heroCarouselItems, shuffledArray);
 
         heroCarouselItems.forEach((item, index) => {
           let nodesFragment = document.createDocumentFragment();
