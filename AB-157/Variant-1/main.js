@@ -21,7 +21,7 @@ function shuffleArray(array) {
   return array;
 }
 
-function randomiseArrayWithFixedPositions(array, randomisedPositions) {
+function randomiseArrayAtPositions(array, randomisedPositions) {
   if (!array) return;
   const newArray = [...array];
   const itemsToShuffle = randomisedPositions.map((pos) => newArray[pos]);
@@ -52,7 +52,7 @@ window.ab157.dynamic =
       if (heroCarousel) {
         // const FIXED_POSITIONS = [0, 1, 3, 5, 8];
         const RANDOMISED_POSITIONS = [2, 4, 6, 7];
-        const shuffledCarouselItems = randomiseArrayWithFixedPositions(
+        const shuffledCarouselItems = randomiseArrayAtPositions(
           heroCarouselItems,
           RANDOMISED_POSITIONS
         );

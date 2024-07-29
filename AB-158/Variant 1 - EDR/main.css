@@ -1,0 +1,4 @@
+html:not(#ab158)[data-web-ab158="1"] edr-dc-dynamic-content edr-section:nth-of-type(2) section {
+    background-color: blue 
+}
+  

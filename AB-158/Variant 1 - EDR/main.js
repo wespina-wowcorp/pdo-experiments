@@ -18,6 +18,8 @@ document.documentElement.dataset.webAb158 = "1";
 
 window.ab158 = window.ab158 || {};
 
+const isBoostsPage = location.pathname.startsWith("/boosts");
+
 window.ab158.dynamic =
   window.ab158.dynamic ||
   (() => {
@@ -28,8 +30,6 @@ window.ab158.dynamic =
       ) {
         return observer.disconnect();
       }
-
-      const isBoostsPage = location.pathname.startsWith("/boosts");
 
       const edrGridContainer = document.querySelector(
         "edr-dc-dynamic-content:has(> edr-section)"
@@ -68,19 +68,7 @@ window.ab158.dynamic =
 
         const boostsHeadingCopy = boostsSubheadingEl.cloneNode(true);
 
-        const boostsContainer = boostsSection.querySelector(":scope > section");
-        const moreBoostsContainer =
-          moreBoostsSection.querySelector(":scope > section");
-
-        // swap background colours
-        if (!isBoostsPage && boostsContainer && moreBoostsContainer) {
-          boostsContainer.style.backgroundColor =
-            "var(--color-secondary--white)";
-          moreBoostsContainer.style.backgroundColor =
-            "var(--color-secondary--light-grey)";
-        }
-
-        // swap headings and cts
+        // swap headings and cta
         if (moreBoostsHeadingEl && boostsHeadingEl) {
           moreBoostsHeadingEl.textContent = boostsHeadingEl.textContent;
           boostsHeadingEl.style.display = "none";
