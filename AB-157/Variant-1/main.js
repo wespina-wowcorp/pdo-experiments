@@ -9,6 +9,7 @@
 // ==/UserScript==
 
 console.log(">>>> AB-157 >>>>");
+
 document.documentElement.dataset.webAb157 = "1";
 
 window.ab157 = window.ab157 || {};
@@ -40,9 +41,6 @@ function randomiseArrayAtPositions(array, randomisedPositions) {
 function shuffleItemsWithReferences(items, shuffledArray) {
   if (!items) return;
 
-  const ORIGINAL_POSITIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-  const shuffledPositions = [0, 1, 7, 3, 6, 5, 2, 4, 8];
-
   const shuffledItems = shuffledArray.map((pos) => items[pos]);
   return shuffledItems;
 }
@@ -63,8 +61,7 @@ window.ab157.dynamic =
       );
 
       if (heroCarousel) {
-        // const FIXED_POSITIONS = [0, 1, 3, 5, 8]; // 0 and 8 are non-visible elements that must remain fixed
-        const RANDOMISED_POSITIONS = [2, 4, 6, 7];
+        const RANDOMISED_POSITIONS = [2, 4, 6, 7]; // CHANGE THIS FOR DIFFERENT VARIATION
         const ORIGINAL_POSITIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
         let shuffledArray = randomiseArrayAtPositions(ORIGINAL_POSITIONS, RANDOMISED_POSITIONS);

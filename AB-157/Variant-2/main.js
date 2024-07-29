@@ -12,6 +12,8 @@ document.documentElement.dataset.webAb157 = "2";
 
 window.ab157 = window.ab157 || {};
 
+const carouselOrder = localStorage.getItem("carouselOrder");
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -20,7 +22,7 @@ function shuffleArray(array) {
   return array;
 }
 
-function randomiseArrayWithFixedPositions(array, randomisedPositions) {
+function randomiseArrayAtPositions(array, randomisedPositions) {
   if (!array) return;
   const newArray = [...array];
   const itemsToShuffle = randomisedPositions.map((pos) => newArray[pos]);
@@ -33,9 +35,17 @@ function randomiseArrayWithFixedPositions(array, randomisedPositions) {
   return newArray;
 }
 
+
+function shuffleItemsWithReferences(items, shuffledArray) {
+  if (!items) return;
+
+  const shuffledItems = shuffledArray.map((pos) => items[pos]);
+  return shuffledItems;
+}
+
 window.ab157.dynamic =
   window.ab157.dynamic ||
-  (() => {
+  ((carouselOrder) => {
     new MutationObserver((_, observer) => {
       if (location.pathname !== "/") {
         return observer.disconnect();
@@ -49,12 +59,19 @@ window.ab157.dynamic =
       );
 
       if (heroCarousel) {
-        // const FIXED_POSITIONS = [0, 1, 3, 5, 8];
-        const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8];
-        const shuffledCarouselItems = randomiseArrayWithFixedPositions(
-          heroCarouselItems,
-          RANDOMISED_POSITIONS
-        );
+        const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8]; // CHANGE THIS FOR DIFFERENT VARIATION
+        const ORIGINAL_POSITIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        let shuffledArray = randomiseArrayAtPositions(ORIGINAL_POSITIONS, RANDOMISED_POSITIONS);
+
+        if (carouselOrder !== null && typeof carouselOrder === 'string') {
+          const carouselOrderArray = carouselOrder.split(',').map(Number);
+          shuffledArray = carouselOrderArray;
+        } else {
+          localStorage.setItem("carouselOrder", shuffledArray);
+        }
+
+        const shuffledCarouselItems = shuffleItemsWithReferences(heroCarouselItems, shuffledArray);
 
         heroCarouselItems.forEach((item, index) => {
           let nodesFragment = document.createDocumentFragment();
@@ -78,8 +95,11 @@ try {
     // This happens when the experiment loads before the web page finishes loading.
     document.addEventListener("DOMContentLoaded", window.ab157.dynamic);
   } else {
-    window.ab157.dynamic();
+    window.ab157.dynamic(carouselOrder);
   }
 } catch (error) {
   console.error("ab157:", error);
 }
+
+
+// const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8];
