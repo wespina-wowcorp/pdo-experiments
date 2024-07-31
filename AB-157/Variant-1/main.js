@@ -105,73 +105,76 @@ window.ab157.dynamic =
       const originalCarouselItems = [...heroCarouselItems].map((item) => {
         const mainImage = item.querySelector(":scope wnz-hero-item-main-image img");
         const contentContainer = item.querySelector(":scope wnz-hero-item-content");
-        const contentImage1 = contentContainer.querySelector(':scope > div img:nth-of-type(1)');
-        const contentImage2 = contentContainer.querySelector(':scope > div img:nth-of-type(2)');
-        const textBlock = contentContainer.querySelector(':scope > section .text-block');
-        const ctaBlock = contentContainer.querySelector(':scope > section .cta-block');
 
         return {
           mainImage,
           contentContainer,
-          contentImage1,
-          contentImage2,
-          textBlock,
-          ctaBlock
         }
       })
+
+      const originalItems = 
       console.log("🚀 ~ originalCarouselItems ~ originalCarouselItems:", originalCarouselItems)
 
       const PLACEHOLDER_IMAGE = (slideNumber) => `https://placehold.co/1994x864?text=Slide+${slideNumber}`; // TODO - REMOVE
 
+      const swapTiles = (tile1, tile2) => {
+        const tile1MainImage = tile1.querySelector(":scope wnz-hero-item-main-image img");
+        const tile1ContentContainer = tile1.querySelector(":scope wnz-hero-item-content");
+        const tile2MainImage = tile2.querySelector(":scope wnz-hero-item-main-image img");
+        const tile2ContentContainer = tile2.querySelector(":scope wnz-hero-item-content");
 
+        if (!tile1MainImage || !tile1ContentContainer || !tile2MainImage || !tile2ContentContainer) return;
+
+        console.log('>>>>>>>>>>>>>>>>> SWAPPING TILES >>>>>>>>>>>>>>>>>');
+
+        const nodesFragment1 = document.createDocumentFragment();
+        nodesFragment1.appendChild(
+          tile1MainImage.cloneNode(true)
+        );
+        tile2MainImage.replaceWith(nodesFragment1);
+
+
+        const nodesFragment2 = document.createDocumentFragment();
+        nodesFragment2.appendChild(
+          tile1ContentContainer.cloneNode(true)
+        );
+        tile2ContentContainer.replaceWith(nodesFragment2);
+      }
 
       heroCarouselItems.forEach((item, index) => {
-        if (index === shuffledArray[index] && (index !== 0 || index !== heroCarouselItems.length - 1)) return;
+        if (index === shuffledArray[index]) return;
+        console.log("🚀 ~ heroCarouselItems.forEach ~ index:", index)
+        console.log("🚀 ~ heroCarouselItems.forEach ~ shuffledArray[index]:", shuffledArray[index])
+
         const mainImage = item.querySelector(":scope wnz-hero-item-main-image img");
         const contentContainer = item.querySelector(":scope wnz-hero-item-content");
-        const contentImage1 = contentContainer.querySelector(':scope > div img:nth-of-type(1)');
-        const contentImage2 = contentContainer.querySelector(':scope > div img:nth-of-type(2)');
-        const textBlock = contentContainer.querySelector(':scope > section .text-block');
-        const ctaBlock = contentContainer.querySelector(':scope > section .cta-block');
 
-
-      //     // if first or last indexes, copy from specific tiles
-      //     // 0 copies content from slide 7
-      //     // 8 copies content from slide 1
-
-        if (originalCarouselItems[shuffledArray[index]]) {
-
-          if (originalCarouselItems[shuffledArray[index]].mainImage) {
-            const nodesFragment = document.createDocumentFragment();
-            nodesFragment.appendChild(
-              originalCarouselItems[shuffledArray[index]].mainImage.cloneNode(true)
-            );
-            mainImage.replaceWith(nodesFragment);
-            // mainImage.src = PLACEHOLDER_IMAGE(index); // TODO - REMOVE
-          }
-          if (originalCarouselItems[shuffledArray[index]].contentContainer) {
-            const nodesFragment = document.createDocumentFragment();
-            nodesFragment.appendChild(
-              originalCarouselItems[shuffledArray[index]].contentContainer.cloneNode(true)
-            );
-            contentContainer.replaceWith(nodesFragment);
-          }
-        }
+        swapTiles(originalCarouselItems[shuffledArray[index]], item);
+        // if (originalCarouselItems[shuffledArray[index]]) {
+        //   if (originalCarouselItems[shuffledArray[index]].mainImage) {
+        //     const nodesFragment = document.createDocumentFragment();
+        //     nodesFragment.appendChild(
+        //       originalCarouselItems[shuffledArray[index]].mainImage.cloneNode(true)
+        //     );
+        //     mainImage.replaceWith(nodesFragment);
+        //     // mainImage.src = PLACEHOLDER_IMAGE(index); // TODO - REMOVE
+        //   }
+        //   if (originalCarouselItems[shuffledArray[index]].contentContainer) {
+        //     const nodesFragment = document.createDocumentFragment();
+        //     nodesFragment.appendChild(
+        //       originalCarouselItems[shuffledArray[index]].contentContainer.cloneNode(true)
+        //     );
+        //     contentContainer.replaceWith(nodesFragment);
+        //   }
+        // }
       });
 
 
-      // const shuffledCarouselItems = window.ab157.shuffleArrayWithPositions(
-      //   heroCarouselItems,
-      //   shuffledArray,
-      // );
 
-      // heroCarouselItems.forEach((item, index) => {
-      //   let nodesFragment = document.createDocumentFragment();
-      //   nodesFragment.appendChild(
-      //     shuffledCarouselItems[index].cloneNode(true)
-      //   );
-      //   item.replaceWith(nodesFragment);
-      // });
+      // 0 copies content from slide 7
+      // if (shuffledArray[7] !== 7) {
+      //   swapTiles(heroCarouselItems[7], heroCarouselItems[0]);
+      // }
 
       return observer.disconnect();
     }).observe(document.body, {

@@ -2,13 +2,11 @@
 // @name         AB-158: Variant 1 - EDR
 // @namespace    http://tampermonkey.net/
 // @version      AB-158_variant_1_edr
-// @description  EDR site - Swap Product and Basket & Category Boosts
+// @description  EDR site - Swap Product and Basket & Category Boosts (boosts)
 // @author       Wilson
 // @match        https://www.everydayrewards.co.nz/boosts*
-// @match        https://www.everydayrewards.co.nz/
 // @match        https://www-uat.everydayrewards.co.nz/boosts*
-// @match        https://www-uat.everydayrewards.co.nz/
-// @require      file://C:\Users\1442718\Development\overrides\AB-158\Variant 1 - EDR\main.js
+// @require      file://C:\Users\1442718\Development\overrides\AB-158\Variant 1 - EDR\boosts.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
@@ -22,18 +20,17 @@ window.ab158.dynamic =
   window.ab158.dynamic ||
   (() => {
     new MutationObserver((mutationList, observer) => {
-      if (
-        !location.pathname.startsWith("/boosts") &&
-        location.pathname !== "/"
-      ) {
+      if (!location.pathname.startsWith("/boosts")) {
         return observer.disconnect();
       }
-
-      const isBoostsPage = location.pathname.startsWith("/boosts");
 
       const edrGridContainer = document.querySelector(
         "edr-dc-dynamic-content:has(> edr-section)"
       );
+
+      if (!edrGridContainer) {
+        return;
+      }
 
       const boostsSection = document.querySelector(
         "edr-dc-dynamic-content edr-section:nth-of-type(2)"
@@ -81,11 +78,6 @@ window.ab158.dynamic =
         }
         if (container && ctaContainer) {
           container.append(ctaContainer);
-
-          if (!isBoostsPage) {
-            container.prepend(boostsHeadingCopy);
-            ctaContainer.style.display = "none";
-          }
         }
       }
 
