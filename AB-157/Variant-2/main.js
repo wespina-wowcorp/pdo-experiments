@@ -58,9 +58,6 @@ window.ab157.clearStorage =
     sessionStorage.setItem("ab_157", 1);
   };
 
-const PLACEHOLDER_IMAGE = (slideNumber) =>
-  `https://placehold.co/1994x864?text=Slide+${slideNumber}`; // TODO - REMOVE
-
 window.ab157.dynamic =
   window.ab157.dynamic ||
   (() => {
@@ -88,10 +85,15 @@ window.ab157.dynamic =
       );
 
       if (carouselOrder !== null && typeof carouselOrder === "string") {
-        const carouselOrderArray = carouselOrder.split(",").map(Number); // TODO - try to just use array instead of string
+        // Carousel order is stored in local storage as a string
+        // We need to convert it back to an array
+        const carouselOrderArray = JSON.parse(carouselOrder);
         shuffledArray = carouselOrderArray;
       } else {
-        localStorage.setItem("ab157_hero_carousel_order", shuffledArray);
+        localStorage.setItem(
+          "ab157_hero_carousel_order",
+          JSON.stringify(shuffledArray) // e.g. '[0, 1, 2, 3, 4, 5, 6, 7, 8]'
+        );
       }
 
       const originalCarouselItems = [...heroCarouselItems].map((item) => {
@@ -116,7 +118,6 @@ window.ab157.dynamic =
           originalCarouselItems[
             shuffledArray[indexToUpdate]
           ].mainImage.cloneNode(true);
-        mainImage.src = PLACEHOLDER_IMAGE(indexToUpdate); // TODO - REMOVE
         nodesFragment1.appendChild(mainImage);
         image.replaceWith(nodesFragment1);
 
@@ -142,7 +143,8 @@ window.ab157.dynamic =
         swapCarouselTiles(mainImage, contentContainer, index);
       });
 
-      // 0 copies content from slide 7
+      // 0 copies content from slide 7 for a smoother animation
+      // Only perform this swap if the 7th item has moved due to the shuffle
       if (shuffledArray[7] !== 7) {
         const mainImage = heroCarouselItems[0].querySelector(
           ":scope wnz-hero-item-main-image img"
@@ -160,10 +162,8 @@ window.ab157.dynamic =
     });
   });
 
-// Main function and starting point of the experiment.
 try {
   if (document.body == null) {
-    // This happens when the experiment loads before the web page finishes loading.
     document.addEventListener("DOMContentLoaded", window.ab157.clearStorage);
     document.addEventListener("DOMContentLoaded", window.ab157.dynamic);
   } else {
