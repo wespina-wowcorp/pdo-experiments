@@ -48,20 +48,10 @@ window.ab157.shuffleArrayWithPositions =
     return array;
   };
 
-window.ab157.clearStorage =
-  window.ab157.clearStorage ||
-  function clearStorage() {
-    const session = sessionStorage.getItem("ab_157");
-    if (session === null) {
-      localStorage.removeItem("ab157_hero_carousel_order");
-    }
-    sessionStorage.setItem("ab_157", 1);
-  };
-
 window.ab157.dynamic =
   window.ab157.dynamic ||
   (() => {
-    const carouselOrder = localStorage.getItem("ab157_hero_carousel_order");
+    const carouselOrder = sessionStorage.getItem("ab157_hero_carousel_order");
 
     new MutationObserver((mutationList, observer) => {
       if (location.pathname !== "/") {
@@ -90,7 +80,7 @@ window.ab157.dynamic =
         const carouselOrderArray = JSON.parse(carouselOrder);
         shuffledArray = carouselOrderArray;
       } else {
-        localStorage.setItem(
+        sessionStorage.setItem(
           "ab157_hero_carousel_order",
           JSON.stringify(shuffledArray) // e.g. '[0, 1, 2, 3, 4, 5, 6, 7, 8]'
         );
@@ -164,10 +154,8 @@ window.ab157.dynamic =
 
 try {
   if (document.body == null) {
-    document.addEventListener("DOMContentLoaded", window.ab157.clearStorage);
     document.addEventListener("DOMContentLoaded", window.ab157.dynamic);
   } else {
-    window.ab157.clearStorage();
     window.ab157.dynamic();
   }
 } catch (error) {
