@@ -22,9 +22,11 @@ document.documentElement.dataset.webAb165 = "1";
 
 window.ab165 = window.ab165 || {};
 
-const IMAGE_PLACEHOLDER = "https://www.woolworths.co.nz/content/235884_valentines-day_specials-hub_article-tile_386x232.jpg";
+const IMAGE_PLACEHOLDER =
+  "https://www.woolworths.co.nz/content/f2418-shat-xmasspecials.jpg";
 const IMAGE_ALT_PLACEHOLDER = "Check out this week's Father's Day Specials";
-const LINK_1 = "https://www.woolworths.co.nz/shop/content/fathers-day";
+const LINK_1 =
+  "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Special;Special;Special;true;Specials&page=1&inStockProductsOnly=false";
 const TITLE = "Father's Day Specials";
 
 window.ab165.dynamic =
@@ -39,24 +41,28 @@ window.ab165.dynamic =
         ".carousel-list cdx-carousel2-item:nth-child(1) cdx-card"
       );
 
-      if (firstCarouselCard) {
-        const cardImage = firstCarouselCard.querySelector(":scope a img");
-        const cardLink = firstCarouselCard.querySelector(":scope a");
-        const cardTitle = firstCarouselCard.querySelector(":scope .article-title");
-
-        if (cardLink && cardImage && cardTitle && cardTitle.childNodes[0]) {
-          cardImage.src = IMAGE_PLACEHOLDER;
-          cardImage.alt = IMAGE_ALT_PLACEHOLDER;
-
-          const url = new URL(cardLink.href);
-          const urlParams = new URLSearchParams(url.search).toString();
-          const updatedURL = `${LINK_1}?${urlParams}`; // TODO - check if need to copy over params
-          cardLink.href = updatedURL;
-          cardTitle.childNodes[0].textContent = TITLE;
-        }
-
-        observer.disconnect();
+      if (!firstCarouselCard) {
+        return;
       }
+
+      const cardImage = firstCarouselCard.querySelector(":scope a img");
+      const cardLink = firstCarouselCard.querySelector(":scope a");
+      const cardTitle = firstCarouselCard.querySelector(
+        ":scope .article-title"
+      );
+
+      if (cardLink && cardImage && cardTitle && cardTitle.childNodes[0]) {
+        cardImage.src = IMAGE_PLACEHOLDER;
+        cardImage.alt = IMAGE_ALT_PLACEHOLDER;
+
+        // const url = new URL(cardLink.href);
+        // const urlParams = new URLSearchParams(url.search).toString();
+        const updatedURL = `${LINK_1}`; // TODO - check if need to copy over params
+        cardLink.href = updatedURL;
+        cardTitle.childNodes[0].textContent = TITLE;
+      }
+
+      observer.disconnect();
     }).observe(document.body, {
       childList: true,
       subtree: true,
