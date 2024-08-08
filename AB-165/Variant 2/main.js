@@ -26,7 +26,8 @@ const IMAGE_PLACEHOLDER =
   "https://www.woolworths.co.nz/content/f2418-shat-xmasspecials.jpg";
 const IMAGE_ALT_PLACEHOLDER = "Check out this week's Father's Day Specials";
 const LINK_2 =
-  "https://www.woolworths.co.nz/shop/content/fathers-day";
+  // "https://www.woolworths.co.nz/shop/content/fathers-day";
+  "https://www.woolworths.co.nz/shop/content/fathers-day?variant=2";
 const TITLE = "Father's Day Specials";
 
 window.ab165.dynamic =

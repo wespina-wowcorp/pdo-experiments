@@ -26,7 +26,8 @@ const IMAGE_PLACEHOLDER =
   "https://www.woolworths.co.nz/content/235884_valentines-day_specials-hub_article-tile_386x232.jpg";
 const IMAGE_ALT_PLACEHOLDER = "Check out this week's Father's Day Specials";
 const LINK_3 =
-  "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Special;Special;Special;true;Specials&page=1&inStockProductsOnly=false";
+  // "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Special;Special;Special;true;Specials&page=1&inStockProductsOnly=false";
+  "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Special;Special;Special;true;Specials&page=1&inStockProductsOnly=false&variant=3";
 const TITLE = "Father's Day Specials";
 
 window.ab165.dynamic =
