@@ -26,8 +26,7 @@ const IMAGE_PLACEHOLDER =
   "https://www.woolworths.co.nz/content/235884_valentines-day_specials-hub_article-tile_386x232.jpg";
 const IMAGE_ALT_PLACEHOLDER = "Check out this week's Father's Day Specials";
 const LINK_3 =
-  // "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Special;Special;Special;true;Specials&page=1&inStockProductsOnly=false";
-  "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Special;Special;Special;true;Specials&page=1&inStockProductsOnly=false&variant=3";
+  "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Special;Special;Special;true;Specials&page=1&inStockProductsOnly=false&variation=3";
 const TITLE = "Father's Day Specials";
 
 window.ab165.dynamic =
@@ -55,10 +54,16 @@ window.ab165.dynamic =
       if (cardLink && cardImage && cardTitle && cardTitle.childNodes[0]) {
         cardImage.src = IMAGE_PLACEHOLDER;
         cardImage.alt = IMAGE_ALT_PLACEHOLDER;
-
-        const updatedURL = LINK_3;
-        cardLink.href = updatedURL;
+        cardLink.href = LINK_3;
         cardTitle.childNodes[0].textContent = TITLE;
+
+        // a click event listener is being added in the app so this overwrites the listener
+        // https://stackoverflow.com/questions/68938727/remove-event-listener-without-knowing-what-the-call-back-function-is
+
+        cardLink.addEventListener('click', (e) => {
+          e.stopImmediatePropagation();
+          e.stopPropagation();
+        }, true);
       }
 
       observer.disconnect();
@@ -66,7 +71,7 @@ window.ab165.dynamic =
       childList: true,
       subtree: true,
     });
-  })3
+  })
 
 try {
   if (document.body == null) {
