@@ -14,13 +14,9 @@ document.documentElement.dataset.webAb157 = "1";
 
 window.ab157 = window.ab157 || {};
 
-// Original order of the carousel items
-window.ab157.carouselOrder = window.ab157.carouselOrder || [
-  0, 1, 2, 3, 4, 5, 6, 7, 8,
-];
-
 window.ab157.positionsToShuffle = window.ab157.positionsToShuffle || [
-  2, 4, 6, 7,
+  // 2, 4, 6, 7,
+  2, 4, 6, // TODO - remove
 ];
 
 window.ab157.shuffleArray =
@@ -48,6 +44,13 @@ window.ab157.shuffleArrayWithPositions =
     return array;
   };
 
+window.ab157.queryStingExists =
+  window.ab157.queryStingExists ||
+  function queryStingExists(qs) {
+    return qs.includes('?');
+  };
+
+
 window.ab157.dynamic =
   window.ab157.dynamic ||
   (() => {
@@ -65,12 +68,15 @@ window.ab157.dynamic =
         "wnz-hero-carousel .hero-carousel-container .hero-items wnz-hero-item"
       );
 
-      if (!heroCarousel || heroCarouselItems.length === 0) {
+      const totalItems = heroCarouselItems.length;
+
+      if (!heroCarousel || totalItems === 0) {
         return;
       }
 
       let shuffledArray = window.ab157.shuffleArrayWithPositions(
-        [...window.ab157.carouselOrder],
+        // Original order of the carousel items
+        [...Array(totalItems).keys()], // e.g. '[0, 1, 2, 3, 4, 5, 6, 7, 8]'
         window.ab157.positionsToShuffle
       );
 
@@ -82,13 +88,13 @@ window.ab157.dynamic =
       } else {
         sessionStorage.setItem(
           "ab157_hero_carousel_order",
-          JSON.stringify(shuffledArray) // e.g. '[0, 1, 2, 3, 4, 5, 6, 7, 8]'
+          JSON.stringify(shuffledArray) // e.g. '[0, 1, 4, 7, 3, 2, 6, 5, 8]'
         );
       }
 
       const originalCarouselItems = [...heroCarouselItems].map((item) => {
         const mainImage = item.querySelector(
-          ":scope wnz-hero-item-main-image img"
+          ":scope wnz-hero-item-main-image a"
         );
         const contentContainer = item.querySelector(
           ":scope wnz-hero-item-content"
@@ -104,18 +110,30 @@ window.ab157.dynamic =
         if (!image || !contentContainer) return;
 
         const nodesFragment1 = document.createDocumentFragment();
+        const newIndex = shuffledArray[indexToUpdate];
         const mainImage =
-          originalCarouselItems[
-            shuffledArray[indexToUpdate]
-          ].mainImage.cloneNode(true);
+          originalCarouselItems[newIndex].mainImage.cloneNode(true);
+        let queryStingUnifier = '?'
+        if (window.ab157.queryStingExists(mainImage.href)) {
+          queryStingUnifier = '&'
+        }
+
+        mainImage.href = `${mainImage.href}${queryStingUnifier}position=${indexToUpdate}`;
         nodesFragment1.appendChild(mainImage);
         image.replaceWith(nodesFragment1);
 
         const nodesFragment2 = document.createDocumentFragment();
         const mainContentContainer =
-          originalCarouselItems[
-            shuffledArray[indexToUpdate]
-          ].contentContainer.cloneNode(true);
+          originalCarouselItems[newIndex].contentContainer.cloneNode(true);
+
+        const cta = mainContentContainer.querySelector(
+          ":scope section .cta-block a.hero-button"
+        );
+
+        if (cta) {
+          cta.href = `${cta.href}${queryStingUnifier}position=${indexToUpdate}`;
+        }
+
         nodesFragment2.appendChild(mainContentContainer);
         contentContainer.replaceWith(nodesFragment2);
       };
@@ -124,7 +142,7 @@ window.ab157.dynamic =
         if (index === shuffledArray[index]) return;
 
         const mainImage = item.querySelector(
-          ":scope wnz-hero-item-main-image img"
+          ":scope wnz-hero-item-main-image a"
         );
         const contentContainer = item.querySelector(
           ":scope wnz-hero-item-content"
@@ -133,16 +151,17 @@ window.ab157.dynamic =
         swapCarouselTiles(mainImage, contentContainer, index);
       });
 
-      // 0 copies content from slide 7 for a smoother animation
-      // Only perform this swap if the 7th item has moved due to the shuffle
-      if (shuffledArray[7] !== 7) {
+      // 0 copies content from last slide for a smoother animation
+      // Only perform this swap if the last item has moved due to the shuffle
+      const lastPosition = totalItems - 2;
+      if (shuffledArray[lastPosition] !== lastPosition) {
         const mainImage = heroCarouselItems[0].querySelector(
           ":scope wnz-hero-item-main-image img"
         );
         const contentContainer = heroCarouselItems[0].querySelector(
           ":scope wnz-hero-item-content"
         );
-        swapCarouselTiles(mainImage, contentContainer, 7);
+        swapCarouselTiles(mainImage, contentContainer, lastPosition);
       }
 
       return observer.disconnect();
