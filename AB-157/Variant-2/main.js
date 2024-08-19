@@ -15,12 +15,7 @@ document.documentElement.dataset.webAb157 = "2";
 window.ab157 = window.ab157 || {};
 
 window.ab157.positionsToShuffle = window.ab157.positionsToShuffle || [
-  // 2, 3, 4, 5, 6, 7
-  2,
-  3,
-  4,
-  5,
-  6, // TODO - remove
+  2, 3, 4, 5, 6, 7,
 ];
 
 window.ab157.shuffleArray =
@@ -54,6 +49,8 @@ window.ab157.queryStingExists =
     return qs.includes("?");
   };
 
+window.ab157.queryStringUnifier = window.ab157.queryStringUnifier || "?";
+
 window.ab157.dynamic =
   window.ab157.dynamic ||
   (() => {
@@ -71,7 +68,7 @@ window.ab157.dynamic =
         "wnz-hero-carousel .hero-carousel-container .hero-items wnz-hero-item"
       );
 
-      const totalItems = heroCarouselItems.length;;
+      const totalItems = heroCarouselItems.length;
 
       if (!heroCarousel || totalItems === 0) {
         return;
@@ -116,14 +113,19 @@ window.ab157.dynamic =
         const newIndex = shuffledArray[indexToUpdate];
         const mainImage =
           originalCarouselItems[newIndex].mainImage.cloneNode(true);
-        let queryStingUnifier = '?'
+
         if (window.ab157.queryStingExists(mainImage.href)) {
-          queryStingUnifier = '&'
+          window.ab157.queryStringUnifier = "&";
         }
 
-        mainImage.href = `${mainImage.href}${queryStingUnifier}position=${indexToUpdate}`;
+        mainImage.href = `${mainImage.href}${window.ab157.queryStringUnifier}position=${indexToUpdate}`;
         nodesFragment1.appendChild(mainImage);
         image.replaceWith(nodesFragment1);
+
+        // copy over click events
+        mainImage.addEventListener("click", () => {
+          originalCarouselItems[newIndex].mainImage.click();
+        });
 
         const nodesFragment2 = document.createDocumentFragment();
         const mainContentContainer =
@@ -134,11 +136,16 @@ window.ab157.dynamic =
         );
 
         if (cta) {
-          cta.href = `${cta.href}${queryStingUnifier}position=${indexToUpdate}`;
+          cta.href = `${cta.href}${window.ab157.queryStringUnifier}position=${indexToUpdate}`;
         }
 
         nodesFragment2.appendChild(mainContentContainer);
         contentContainer.replaceWith(nodesFragment2);
+
+        // copy over click events
+        cta.addEventListener('click', () => {
+          originalCarouselItems[newIndex].mainImage.click();
+        });
       };
 
       heroCarouselItems.forEach((item, index) => {
@@ -154,7 +161,7 @@ window.ab157.dynamic =
         swapCarouselTiles(mainImage, contentContainer, index);
       });
 
-      // 0 copies content from last slide for a smoother animation
+      // position 0 copies content from last position for a smoother animation
       // Only perform this swap if the last item has moved due to the shuffle
       const lastPosition = totalItems - 2;
       if (shuffledArray[lastPosition] !== lastPosition) {
