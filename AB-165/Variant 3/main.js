@@ -22,12 +22,13 @@ document.documentElement.dataset.webAb165 = "3";
 
 window.ab165 = window.ab165 || {};
 
-const IMAGE_PLACEHOLDER =
-  "https://www.woolworths.co.nz/content/235884_valentines-day_specials-hub_article-tile_386x232.jpg";
-const IMAGE_ALT_PLACEHOLDER = "Check out this week's Father's Day Specials";
-const LINK_3 =
-  "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Special;Special;Special;true;Specials&page=1&inStockProductsOnly=false&variation=3";
-const TITLE = "Father's Day Specials";
+window.ab165.tileDetails =
+  window.ab165.tileDetails || {
+    imageSrc: "https://www.woolworths.co.nz/content/f25wk9-fathersday-yellow-big.jpg",
+    tileLink: "https://www.woolworths.co.nz/shop/content/fathers-day?variation=3",
+    altText: "Check out this week's Father's Day Specials",
+    title: "Father's Day Specials"
+  }
 
 window.ab165.dynamic =
   window.ab165.dynamic ||
@@ -52,10 +53,10 @@ window.ab165.dynamic =
       );
 
       if (cardLink && cardImage && cardTitle && cardTitle.childNodes[0]) {
-        cardImage.src = IMAGE_PLACEHOLDER;
-        cardImage.alt = IMAGE_ALT_PLACEHOLDER;
-        cardLink.href = LINK_3;
-        cardTitle.childNodes[0].textContent = TITLE;
+        cardImage.alt = window.ab165.tileDetails.altText;
+        cardTitle.childNodes[0].textContent = window.ab165.tileDetails.title;
+        cardImage.src = window.ab165.tileDetails.imageSrc;
+        cardLink.href = window.ab165.tileDetails.tileLink;
 
         // a click event listener is being added in the app so this overwrites the listener
         // https://stackoverflow.com/questions/68938727/remove-event-listener-without-knowing-what-the-call-back-function-is
