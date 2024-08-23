@@ -28,7 +28,7 @@ window.ab165.tileDetails =
     tileLink: "https://www.woolworths.co.nz/shop/content/fathers-day?variation=1",
     altText: "Check out this week's Father's Day Specials",
     title: "Father's Day Specials"
-  }
+  };
 
 window.ab165.dynamic =
   window.ab165.dynamic ||
@@ -45,6 +45,8 @@ window.ab165.dynamic =
       if (!firstCarouselCard) {
         return;
       }
+
+      observer.disconnect();
 
       const cardImage = firstCarouselCard.querySelector(":scope a img");
       const cardLink = firstCarouselCard.querySelector(":scope a");
@@ -67,7 +69,8 @@ window.ab165.dynamic =
         }, true);
       }
 
-      observer.disconnect();
+      observer.observe(document.body, { childList: true, subtree: true });
+
     }).observe(document.body, {
       childList: true,
       subtree: true,

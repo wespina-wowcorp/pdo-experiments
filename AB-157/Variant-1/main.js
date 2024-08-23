@@ -119,7 +119,7 @@ window.ab157.dynamic =
           window.ab157.queryStringUnifier = "&";
         }
 
-        mainImage.href = `${mainImage.href}${window.ab157.queryStringUnifier}position=${indexToUpdate}`;
+        mainImage.href = `${mainImage.href}${window.ab157.queryStringUnifier}ab157-1-position=${indexToUpdate}`;
         nodesFragment1.appendChild(mainImage);
         image.replaceWith(nodesFragment1);
 

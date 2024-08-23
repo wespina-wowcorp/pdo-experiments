@@ -46,6 +46,8 @@ window.ab165.dynamic =
         return;
       }
 
+      observer.disconnect();
+
       const cardImage = firstCarouselCard.querySelector(":scope a img");
       const cardLink = firstCarouselCard.querySelector(":scope a");
       const cardTitle = firstCarouselCard.querySelector(
@@ -67,7 +69,8 @@ window.ab165.dynamic =
         }, true);
       }
 
-      observer.disconnect();
+      observer.observe(document.body, { childList: true, subtree: true });
+      
     }).observe(document.body, {
       childList: true,
       subtree: true,
