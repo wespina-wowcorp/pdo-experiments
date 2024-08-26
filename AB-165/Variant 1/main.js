@@ -25,9 +25,7 @@ window.ab165 = window.ab165 || {};
 window.ab165.tileDetails =
   window.ab165.tileDetails || {
     imageSrc: "https://www.woolworths.co.nz/content/f25wk9-fathersday-green-big.jpg",
-    tileLink: "https://www.woolworths.co.nz/shop/content/fathers-day?variation=1",
-    altText: "Check out this week's Father's Day Specials",
-    title: "Father's Day Specials"
+    tileLink: "https://www.woolworths.co.nz/shop/content/fathers-day?variation=1"
   };
 
 window.ab165.dynamic =
@@ -55,8 +53,6 @@ window.ab165.dynamic =
       );
 
       if (cardLink && cardImage && cardTitle && cardTitle.childNodes[0]) {
-        cardImage.alt = window.ab165.tileDetails.altText;
-        cardTitle.childNodes[0].textContent = window.ab165.tileDetails.title;
         cardImage.src = window.ab165.tileDetails.imageSrc;
         cardLink.href = window.ab165.tileDetails.tileLink;
 

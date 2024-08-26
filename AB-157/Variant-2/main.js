@@ -10,12 +10,15 @@
 
 // const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8];
 
+console.log(">>>> AB-157 >>>>");
+
 document.documentElement.dataset.webAb157 = "2";
 
 window.ab157 = window.ab157 || {};
 
 window.ab157.positionsToShuffle = window.ab157.positionsToShuffle || [
-  2, 3, 4, 5, 6, 7,
+  // 2, 3, 4, 5, 6, 7,
+  2, 3, 4, 5, 6, // TODO - REMOVE
 ];
 
 window.ab157.shuffleArray =
@@ -74,6 +77,8 @@ window.ab157.dynamic =
         return;
       }
 
+      observer.disconnect();
+
       let shuffledArray = window.ab157.shuffleArrayWithPositions(
         // Original order of the carousel items
         [...Array(totalItems).keys()], // e.g. '[0, 1, 2, 3, 4, 5, 6, 7, 8]'
@@ -118,14 +123,16 @@ window.ab157.dynamic =
           window.ab157.queryStringUnifier = "&";
         }
 
-        mainImage.href = `${mainImage.href}${window.ab157.queryStringUnifier}position=${indexToUpdate}`;
         nodesFragment1.appendChild(mainImage);
         image.replaceWith(nodesFragment1);
 
         // copy over click events
-        mainImage.addEventListener("click", () => {
-          originalCarouselItems[newIndex].mainImage.click();
-        });
+        if (mainImage) {
+          mainImage.addEventListener('click', () => {
+            originalCarouselItems[newIndex].mainImage.click();
+            document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-2-position=${indexToUpdate}`;
+          });
+        }
 
         const nodesFragment2 = document.createDocumentFragment();
         const mainContentContainer =
@@ -135,17 +142,16 @@ window.ab157.dynamic =
           ":scope section .cta-block a.hero-button"
         );
 
-        if (cta) {
-          cta.href = `${cta.href}${window.ab157.queryStringUnifier}position=${indexToUpdate}`;
-        }
-
         nodesFragment2.appendChild(mainContentContainer);
         contentContainer.replaceWith(nodesFragment2);
 
         // copy over click events
-        cta.addEventListener('click', () => {
-          originalCarouselItems[newIndex].mainImage.click();
-        });
+        if (cta) {
+          cta.addEventListener('click', () => {
+            originalCarouselItems[newIndex].mainImage.click();
+            document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-2-position=${indexToUpdate}`;
+          });
+        }
       };
 
       heroCarouselItems.forEach((item, index) => {
@@ -174,7 +180,7 @@ window.ab157.dynamic =
         swapCarouselTiles(mainImage, contentContainer, lastPosition);
       }
 
-      return observer.disconnect();
+      observer.observe(document.body, { childList: true, subtree: true });
     }).observe(document.body, {
       childList: true,
       subtree: true,

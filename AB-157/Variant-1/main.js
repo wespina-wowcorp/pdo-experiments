@@ -15,7 +15,8 @@ document.documentElement.dataset.webAb157 = "1";
 window.ab157 = window.ab157 || {};
 
 window.ab157.positionsToShuffle = window.ab157.positionsToShuffle || [
-  2, 4, 6, 7,
+  // 2, 4, 6, 7,
+  2, 4, 6, // TODO - REMOVE
 ];
 
 window.ab157.shuffleArray =
@@ -119,14 +120,16 @@ window.ab157.dynamic =
           window.ab157.queryStringUnifier = "&";
         }
 
-        mainImage.href = `${mainImage.href}${window.ab157.queryStringUnifier}ab157-1-position=${indexToUpdate}`;
         nodesFragment1.appendChild(mainImage);
         image.replaceWith(nodesFragment1);
 
         // copy over click events
-        mainImage.addEventListener('click', () => {
-          originalCarouselItems[newIndex].mainImage.click();
-        });
+        if (mainImage) {
+          mainImage.addEventListener('click', () => {
+            originalCarouselItems[newIndex].mainImage.click();
+            document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-1-position=${indexToUpdate}`;
+          });
+        }
 
         const nodesFragment2 = document.createDocumentFragment();
         const mainContentContainer =
@@ -136,18 +139,19 @@ window.ab157.dynamic =
           ":scope section .cta-block a.hero-button"
         );
 
-        if (cta) {
-          cta.href = `${cta.href}${window.ab157.queryStringUnifier}position=${indexToUpdate}`;
-        }
-
         nodesFragment2.appendChild(mainContentContainer);
         contentContainer.replaceWith(nodesFragment2);
 
         // copy over click events
-        cta.addEventListener('click', () => {
-          originalCarouselItems[newIndex].mainImage.click();
-        });
+        if (cta) {
+          cta.addEventListener('click', () => {
+            originalCarouselItems[newIndex].mainImage.click();
+            document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-1-position=${indexToUpdate}`;
+          });
+        }
       };
+
+      observer.disconnect();
 
       heroCarouselItems.forEach((item, index) => {
         if (index === shuffledArray[index]) return;
@@ -175,7 +179,6 @@ window.ab157.dynamic =
         swapCarouselTiles(mainImage, contentContainer, lastPosition);
       }
 
-      return observer.disconnect();
     }).observe(document.body, {
       childList: true,
       subtree: true,
