@@ -10,7 +10,7 @@
 
 // const RANDOMISED_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8];
 
-console.log(">>>> AB-157 >>>>");
+console.log(">>>> AB-157 >>>> VAR 2");
 
 document.documentElement.dataset.webAb157 = "2";
 
@@ -77,8 +77,6 @@ window.ab157.dynamic =
         return;
       }
 
-      observer.disconnect();
-
       let shuffledArray = window.ab157.shuffleArrayWithPositions(
         // Original order of the carousel items
         [...Array(totalItems).keys()], // e.g. '[0, 1, 2, 3, 4, 5, 6, 7, 8]'
@@ -93,7 +91,7 @@ window.ab157.dynamic =
       } else {
         sessionStorage.setItem(
           "ab157_hero_carousel_order",
-          JSON.stringify(shuffledArray) // e.g. '[0, 1, 2, 3, 4, 5, 6, 7, 8]'
+          JSON.stringify(shuffledArray) // e.g. '[0, 1, 4, 7, 3, 2, 6, 5, 8]'
         );
       }
 
@@ -157,7 +155,7 @@ window.ab157.dynamic =
         if (index === shuffledArray[index]) return;
 
         const mainImage = item.querySelector(
-          ":scope wnz-hero-item-main-image img"
+          ":scope wnz-hero-item-main-image a"
         );
         const contentContainer = item.querySelector(
           ":scope wnz-hero-item-content"
@@ -179,7 +177,8 @@ window.ab157.dynamic =
         swapCarouselTiles(mainImage, contentContainer, lastPosition);
       }
 
-      observer.observe(document.body, { childList: true, subtree: true });
+      observer.disconnect();
+
     }).observe(document.body, {
       childList: true,
       subtree: true,

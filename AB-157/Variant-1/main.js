@@ -149,8 +149,6 @@ window.ab157.dynamic =
         }
       };
 
-      observer.disconnect();
-
       heroCarouselItems.forEach((item, index) => {
         if (index === shuffledArray[index]) return;
 
@@ -176,6 +174,9 @@ window.ab157.dynamic =
         );
         swapCarouselTiles(mainImage, contentContainer, lastPosition);
       }
+
+      observer.disconnect();
+
     }).observe(document.body, {
       childList: true,
       subtree: true,
