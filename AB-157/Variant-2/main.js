@@ -118,6 +118,11 @@ window.ab157.dynamic =
         const newIndex = shuffledArray[indexToUpdate];
         const mainImage =
           originalCarouselItems[newIndex].mainImage.cloneNode(true);
+        const mainContentContainer =
+          originalCarouselItems[newIndex].contentContainer.cloneNode(true);
+        const cta = mainContentContainer.querySelector(
+          ":scope section .cta-block a.hero-button"
+        );
 
         if (window.ab157.queryStingExists(mainImage.href)) {
           window.ab157.queryStringUnifier = "&";
@@ -127,27 +132,21 @@ window.ab157.dynamic =
         image.replaceWith(nodesFragment1);
 
         // copy over click events
-        if (mainImage) {
-          mainImage.addEventListener('click', () => {
+        if (mainImage && cta) {
+          mainImage.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
             document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-2-position=${indexToUpdate}`;
           });
         }
 
         const nodesFragment2 = document.createDocumentFragment();
-        const mainContentContainer =
-          originalCarouselItems[newIndex].contentContainer.cloneNode(true);
-
-        const cta = mainContentContainer.querySelector(
-          ":scope section .cta-block a.hero-button"
-        );
 
         nodesFragment2.appendChild(mainContentContainer);
         contentContainer.replaceWith(nodesFragment2);
 
         // copy over click events
         if (cta) {
-          cta.addEventListener('click', () => {
+          cta.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
             document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-2-position=${indexToUpdate}`;
           });
