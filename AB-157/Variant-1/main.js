@@ -15,8 +15,7 @@ document.documentElement.dataset.webAb157 = "1";
 window.ab157 = window.ab157 || {};
 
 window.ab157.positionsToShuffle = window.ab157.positionsToShuffle || [
-  // 2, 4, 6, 7,
-  2, 4, 6, // TODO - REMOVE
+  2, 4, 6, // 7, // TODO - ADD 7 where there are 7 tiles present. Currently 6 in prod
 ];
 
 window.ab157.shuffleArray =
@@ -50,7 +49,6 @@ window.ab157.queryStingExists =
     return qs.includes("?");
   };
 
-window.ab157.queryStringUnifier = window.ab157.queryStringUnifier || "?";
 
 window.ab157.dynamic =
   window.ab157.dynamic ||
@@ -120,8 +118,10 @@ window.ab157.dynamic =
           ":scope section .cta-block a.hero-button"
         );
 
+        let queryStringUnifier = "?";
+
         if (window.ab157.queryStingExists(mainImage.href)) {
-          window.ab157.queryStringUnifier = "&";
+          queryStringUnifier = "&";
         }
 
         nodesFragment1.appendChild(mainImage);
@@ -131,7 +131,7 @@ window.ab157.dynamic =
         if (mainImage && cta) {
           mainImage.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
-            document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-1-position=${indexToUpdate}`;
+            document.location.href = `${cta.href}${queryStringUnifier}ab157-1-position=${indexToUpdate}`;
           });
         }
 
@@ -144,7 +144,7 @@ window.ab157.dynamic =
         if (cta) {
           cta.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
-            document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-1-position=${indexToUpdate}`;
+            document.location.href = `${cta.href}${queryStringUnifier}ab157-1-position=${indexToUpdate}`;
           });
         }
       };

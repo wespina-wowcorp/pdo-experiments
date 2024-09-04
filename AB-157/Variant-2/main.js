@@ -17,8 +17,7 @@ document.documentElement.dataset.webAb157 = "2";
 window.ab157 = window.ab157 || {};
 
 window.ab157.positionsToShuffle = window.ab157.positionsToShuffle || [
-  // 2, 3, 4, 5, 6, 7,
-  2, 3, 4, 5, 6, // TODO - REMOVE
+  2, 3, 4, 5, 6, // 7, // TODO - ADD 7 where there are 7 tiles present. Currently 6 in prod
 ];
 
 window.ab157.shuffleArray =
@@ -51,8 +50,6 @@ window.ab157.queryStingExists =
   function queryStingExists(qs) {
     return qs.includes("?");
   };
-
-window.ab157.queryStringUnifier = window.ab157.queryStringUnifier || "?";
 
 window.ab157.dynamic =
   window.ab157.dynamic ||
@@ -121,19 +118,24 @@ window.ab157.dynamic =
         const cta = mainContentContainer.querySelector(
           ":scope section .cta-block a.hero-button"
         );
+        console.log("🚀 ~ swapCarouselTiles ~ cta:", cta)
+        console.log("🚀 ~ swapCarouselTiles ~ cta href:", cta.href)
+
+        let queryStringUnifier = "?";
 
         if (window.ab157.queryStingExists(mainImage.href)) {
-          window.ab157.queryStringUnifier = "&";
+          queryStringUnifier = "&";
         }
 
         nodesFragment1.appendChild(mainImage);
         image.replaceWith(nodesFragment1);
+        
 
         // copy over click events
         if (mainImage && cta) {
           mainImage.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
-            document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-2-position=${indexToUpdate}`;
+            document.location.href = `${cta.href}${queryStringUnifier}ab157-2-position=${indexToUpdate}`;
           });
         }
 
@@ -146,7 +148,7 @@ window.ab157.dynamic =
         if (cta) {
           cta.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
-            document.location.href = `${cta.href}${window.ab157.queryStringUnifier}ab157-2-position=${indexToUpdate}`;
+            document.location.href = `${cta.href}${queryStringUnifier}ab157-2-position=${indexToUpdate}`;
           });
         }
       };
