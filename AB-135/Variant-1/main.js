@@ -30,7 +30,7 @@ window.ab135.changeContent =
     >
       <div>
         <edr-image class="image" style="width: auto;">
-          <div class="image__container>
+          <div class="image__container">
             <picture>
               <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=686&h=421&fit=fill&q=100">
               <source media="(min-width:768px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=600&h=368&fit=fill&q=100">
