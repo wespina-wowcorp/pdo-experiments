@@ -16,12 +16,6 @@ document.documentElement.dataset.webAb135 = "1";
 
 window.ab135 = window.ab135 || {};
 
-window.ab135.createPictureEl =
-  window.ab135.createPictureEl ||
-  (() => {
-    const fragment = document.createDocumentFragment();
-  });
-
 window.ab135.changeContent =
   window.ab135.changeContent ||
   ((targetElement) => {
@@ -38,10 +32,10 @@ window.ab135.changeContent =
         <edr-image class="image" style="width: auto;">
           <div class="image__container>
             <picture>
-              <source
-                media="(min-width:1440px)"
-                srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&amp;w=686&amp;h=421&amp;fit=fill&amp;q=100">
-              <img src="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&amp;w=686&amp;h=421&amp;fit=fill&amp;q=100" alt="Mobile phone in a hand">
+              <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=686&h=421&fit=fill&q=100">
+              <source media="(min-width:768px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=600&h=368&fit=fill&q=100">
+              <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=462&h=283&fit=fill&q=100">
+              <img src="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=462&h=283&fit=fill&q=100" alt="Mobile phone in a hand">
             </picture>
           </div>
         </edr-image>
@@ -50,6 +44,18 @@ window.ab135.changeContent =
     `);
     targetElement.replaceWith(documentFragment);
   });
+
+  /*
+  
+  
+  <picture _ngcontent-ng-c3925865357="">
+   <source _ngcontent-ng-c3925865357="" media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/3Kufzh5HBWsmyluFkmsexC/7da828a4b748372f8949af72df5e1aaf/happy-child-father-hero.webp?fm=avif&amp;w=686&amp;h=421&amp;fit=fill&amp;q=100">
+   <source _ngcontent-ng-c3925865357="" media="(min-width:768px)" srcset="//images.ctfassets.net/28bohp801cze/3Kufzh5HBWsmyluFkmsexC/7da828a4b748372f8949af72df5e1aaf/happy-child-father-hero.webp?fm=avif&amp;w=600&amp;h=368&amp;fit=fill&amp;q=100">
+   <source _ngcontent-ng-c3925865357="" srcset="//images.ctfassets.net/28bohp801cze/3Kufzh5HBWsmyluFkmsexC/7da828a4b748372f8949af72df5e1aaf/happy-child-father-hero.webp?fm=avif&amp;w=462&amp;h=283&amp;fit=fill&amp;q=100">
+   <img _ngcontent-ng-c3925865357="" src="//images.ctfassets.net/28bohp801cze/3Kufzh5HBWsmyluFkmsexC/7da828a4b748372f8949af72df5e1aaf/happy-child-father-hero.webp" alt="happy child on shoulders of father">
+</picture>
+  
+  */
 
 window.ab135.headingCopy =
   window.ab135.headingCopy ||
@@ -81,20 +87,17 @@ window.ab135.dynamic =
       const subHeading = document.querySelector(
         ".banner__body-info-content > p.banner__description"
       );
-      console.log("🚀 ~ newMutationObserver ~ topBanner:", topBanner);
-
       const div = document.createElement("div");
 
+      // const edrBannerBody = topBanner.querySelector(
+      //   ":scope edr-banner .banner .banner__body"
+      // );
       const edrBannerBody = topBanner.querySelector(
-        ":scope edr-banner .banner .banner__body"
+        ":scope > section"
       );
-      console.log("🚀 ~ newMutationObserver ~ edrBannerBody:", edrBannerBody);
       edrBannerBody.appendChild(div);
 
       window.ab135.changeContent(div);
-
-      // create picture element
-      // append picture element to topBanner
 
       if (heading) {
         heading.textContent = window.ab135.headingCopy;
