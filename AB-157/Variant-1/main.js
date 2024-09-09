@@ -15,16 +15,23 @@ document.documentElement.dataset.webAb157 = "1";
 window.ab157 = window.ab157 || {};
 
 window.ab157.positionsToShuffle = window.ab157.positionsToShuffle || [
-  2, 4, 6, // 7, // TODO - ADD 7 where there are 7 tiles present. Currently 6 in prod
+  2, 4, 6, 7
 ];
 
 window.ab157.shuffleArray =
   window.ab157.shuffleArray ||
   function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
+    // for (let i = array.length - 1; i > 0; i--) {
+    //   const j = Math.floor(Math.random() * (i + 1));
+    //   [array[i], array[j]] = [array[j], array[i]];
+    // }
+    // return array;
+
+    array.forEach((item, index1) => {
+      const index2 = Math.floor(Math.random() * (item + 1));
+      [array[index1], array[index2]] = [array[index2], array[index1]];
+    });
+
     return array;
   };
 

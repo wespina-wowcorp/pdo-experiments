@@ -1,0 +1,117 @@
+html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body {
+  height: 100%;
+  align-items: initial;
+  -ms-display: flex;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: initial;
+}
+
+html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body-media {
+  align-items: center;
+  -ms-display: flex;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: var(--media-align);
+}
+
+html:not(#ab135)[data-web-ab135="1"]
+  .ab135.banner__body-media
+  .image__container
+  picture
+  img {
+  max-width: 100%;
+  width: auto;
+}
+
+/* Padding */
+
+html:not(#ab135)[data-web-ab135="1"]
+  edr-section[_nghost-ng-c1460657692=""]
+  > section {
+  padding-bottom: 0 !important;
+}
+
+/* Replace text */
+
+html:not(#ab135)[data-web-ab135="1"]
+  edr-heading.banner__title.heading.heading--1
+  h1
+  span {
+  color: transparent;
+  font-size: 0;
+  overflow: hidden;
+}
+
+html:not(#ab135)[data-web-ab135="1"]
+  edr-heading.banner__title.heading.heading--1
+  h1
+  span::after {
+  font-size: 2.375rem;
+  color: rgb(58, 71, 78);
+  content: "Get to 2,000 points faster with your weekly Boosts";
+  display: inline-block;
+}
+
+html:not(#ab135)[data-web-ab135="1"]
+  edr-heading.banner__title.heading.heading--1
+  ~ p.banner__description {
+  color: transparent;
+  font-size: 0;
+  overflow: hidden;
+}
+
+html:not(#ab135)[data-web-ab135="1"]
+  edr-heading.banner__title.heading.heading--1
+  ~ p.banner__description::after {
+  font-size: 1.125rem;
+  color: rgb(58, 71, 78);
+  content: "Hit 'Boost' to activate your offers before you shop in-store or online. New Boosts are loaded every Monday.";
+  display: inline-block;
+}
+
+@media screen and (min-width: 768px) {
+  html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body-media {
+    padding: 0;
+    justify-content: flex-end;
+  }
+
+  html:not(#ab135)[data-web-ab135="1"]
+    edr-heading.banner__title.heading.heading--1
+    ~ p.banner__description {
+    padding: 0;
+    justify-content: flex-end;
+  }
+
+  html:not(#ab135)[data-web-ab135="1"]
+    edr-heading.banner__title.heading.heading--1
+    h1
+    span::after {
+    color: rgb(58, 71, 78);
+    font-size: 2.75rem;
+  }
+
+  html:not(#ab135)[data-web-ab135="1"]
+    edr-heading.banner__title.heading.heading--1
+    ~ p.banner__description::after {
+    color: rgb(58, 71, 78);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  html:not(#ab135)[data-web-ab135="1"]
+    edr-heading.banner__title.heading.heading--1
+    h1
+    span::after {
+    font-size: 3rem;
+  }
+
+  html:not(#ab135)[data-web-ab135="1"]
+    edr-heading.banner__title.heading.heading--1
+    ~ p.banner__description::after {
+    color: rgb(58, 71, 78);
+    font-size: 1.5rem;
+  }
+}
