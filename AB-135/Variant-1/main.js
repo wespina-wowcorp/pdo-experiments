@@ -34,6 +34,10 @@ window.ab135.subTitleCopy =
   window.ab135.subTitleCopy ||
   'Hit "Boost" to activate your offers before you shop in-store or online. New Boosts are loaded every Monday.';
 
+window.ab135.baseImagePath =
+  window.ab135.baseImagePath ||
+  '//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg';
+
 window.ab135.dynamic =
   window.ab135.dynamic ||
   (() => {
@@ -74,10 +78,10 @@ window.ab135.dynamic =
             <edr-image _ngcontent-ng-c2101707264 _nghost-ng-c2101707264 class="image" style="width: auto;">
               <div class="image__container">
                 <picture>
-                  <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=605&h=436&fit=fill&q=100">
-                  <source media="(min-width:768px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=605&h=436&fit=fill&q=100">
-                  <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=375&h=261&fit=fill&q=100">
-                  <img src="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=375&h=261&fit=fill&q=100" alt="Mobile phone in a hand">
+                  <source media="(min-width:1440px)" srcset="${window.ab135.baseImagePath}?fm=avif&w=605&h=436&fit=fill&q=100">
+                  <source media="(min-width:768px)" srcset="${window.ab135.baseImagePath}?fm=avif&w=605&h=436&fit=fill&q=100">
+                  <source media="(min-width:1440px)" srcset="${window.ab135.baseImagePath}?fm=avif&w=375&h=261&fit=fill&q=100">
+                  <img src="${window.ab135.baseImagePath}?fm=avif&w=375&h=261&fit=fill&q=100" alt="Mobile phone being held">
                 </picture>
               </div>
             </edr-image>
@@ -169,7 +173,6 @@ html:not(#ab135)[data-web-ab135="1"]
   > section {
   padding-bottom: 0 !important;
 }
-
 
 @media screen and (min-width: 768px) {
   html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body-media {
