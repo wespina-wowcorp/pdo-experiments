@@ -19,23 +19,10 @@ window.ab135 = window.ab135 || {};
 
 window.ab135.changeContent =
   window.ab135.changeContent ||
-  ((targetElement) => {
-    const documentFragment = document.createRange().createContextualFragment(`
-    <div _ngcontent-ng-c2101707264 class="banner__body-media ab135">
-      <div _ngcontent-ng-c2101707264>
-        <edr-image _ngcontent-ng-c2101707264 _nghost-ng-c2101707264 class="image" style="width: auto;">
-          <div class="image__container">
-            <picture>
-              <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=605&h=436&fit=fill&q=100">
-              <source media="(min-width:768px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=605&h=436&fit=fill&q=100">
-              <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=375&h=261&fit=fill&q=100">
-              <img src="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=375&h=261&fit=fill&q=100" alt="Mobile phone in a hand">
-            </picture>
-          </div>
-        </edr-image>
-      </div>
-    </div>
-    `);
+  ((targetElement, html) => {
+    const documentFragment = document
+      .createRange()
+      .createContextualFragment(html);
     targetElement.replaceWith(documentFragment);
   });
 
@@ -66,8 +53,10 @@ window.ab135.dynamic =
       const heading = document.querySelector(
         ".banner__body-info-content edr-heading h1"
       );
-      const subHeading = document.querySelector(
-        ".banner__body-info-content > p.banner__description"
+
+      const infoContent = document.querySelector(".banner__body-info-content");
+      const subHeading = infoContent.querySelector(
+        ":scope > p.banner__description"
       );
       const div = document.createElement("div");
 
@@ -77,14 +66,54 @@ window.ab135.dynamic =
 
       edrBannerBody.appendChild(div);
 
-      window.ab135.changeContent(div);
+      window.ab135.changeContent(
+        div,
+        `
+        <div _ngcontent-ng-c2101707264 class="banner__body-media ab135">
+          <div _ngcontent-ng-c2101707264>
+            <edr-image _ngcontent-ng-c2101707264 _nghost-ng-c2101707264 class="image" style="width: auto;">
+              <div class="image__container">
+                <picture>
+                  <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=605&h=436&fit=fill&q=100">
+                  <source media="(min-width:768px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=605&h=436&fit=fill&q=100">
+                  <source media="(min-width:1440px)" srcset="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=375&h=261&fit=fill&q=100">
+                  <img src="//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg?fm=avif&w=375&h=261&fit=fill&q=100" alt="Mobile phone in a hand">
+                </picture>
+              </div>
+            </edr-image>
+          </div>
+        </div>
+      `
+      );
 
       if (heading) {
-        heading.ariaLabel = window.ab135.headingCopy;
+        const textEl = heading.querySelector(":scope span");
+        if (textEl) {
+          textEl.ariaHidden = "true";
+          textEl.classList.add("sr-hidden");
+        }
+        const span = document.createElement("span");
+        heading.appendChild(span);
+        window.ab135.changeContent(
+          span,
+          `<span _ngcontent-ng-c652155298>
+            ${window.ab135.headingCopy}
+          </span>`
+        );
       }
 
-      if (subHeading) {
-        subHeading.ariaLabel = window.ab135.subTitleCopy;
+      if (infoContent && subHeading) {
+        subHeading.ariaHidden = "true";
+        subHeading.classList.add("sr-hidden");
+
+        const paragraph = document.createElement("p");
+        infoContent.appendChild(paragraph);
+        window.ab135.changeContent(
+          paragraph,
+          `<p _ngcontent-ng-c2101707264="" edr-typography="" class="banner__description" _nghost-ng-c2124758243="" typographyas="sub-heading--1">
+            ${window.ab135.subTitleCopy}
+          </p>`
+        );
       }
 
       observer.disconnect();
@@ -105,7 +134,6 @@ try {
 }
 
 GM_addStyle(`
-
 html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body {
   height: 100%;
   align-items: initial;
@@ -142,43 +170,6 @@ html:not(#ab135)[data-web-ab135="1"]
   padding-bottom: 0 !important;
 }
 
-/* Replace text */
-
-html:not(#ab135)[data-web-ab135="1"]
-  edr-heading.banner__title.heading.heading--1
-  h1
-  span {
-  color: transparent;
-  font-size: 0;
-  overflow: hidden;
-}
-
-html:not(#ab135)[data-web-ab135="1"]
-  edr-heading.banner__title.heading.heading--1
-  h1
-  span::after {
-  font-size: 2.375rem;
-  color: rgb(58, 71, 78);
-  content: "Get to 2,000 points faster with your weekly Boosts";
-  display: inline-block;
-}
-
-html:not(#ab135)[data-web-ab135="1"]
-  edr-heading.banner__title.heading.heading--1
-  ~ p.banner__description {
-  color: transparent;
-  font-size: 0;
-  overflow: hidden;
-}
-
-html:not(#ab135)[data-web-ab135="1"]
-  edr-heading.banner__title.heading.heading--1
-  ~ p.banner__description::after {
-  font-size: 1.125rem;
-  color: rgb(58, 71, 78);
-  content: "Hit 'Boost' to activate your offers before you shop in-store or online. New Boosts are loaded every Monday.";
-  display: inline-block;
-}
 
 @media screen and (min-width: 768px) {
   html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body-media {
@@ -192,36 +183,17 @@ html:not(#ab135)[data-web-ab135="1"]
     padding: 0;
     justify-content: flex-end;
   }
-
-  html:not(#ab135)[data-web-ab135="1"]
-    edr-heading.banner__title.heading.heading--1
-    h1
-    span::after {
-    color: rgb(58, 71, 78);
-    font-size: 2.75rem;
-  }
-
-  html:not(#ab135)[data-web-ab135="1"]
-    edr-heading.banner__title.heading.heading--1
-    ~ p.banner__description::after {
-    color: rgb(58, 71, 78);
-  }
 }
 
-@media screen and (min-width: 1024px) {
-  html:not(#ab135)[data-web-ab135="1"]
-    edr-heading.banner__title.heading.heading--1
-    h1
-    span::after {
-    font-size: 3rem;
-  }
-
-  html:not(#ab135)[data-web-ab135="1"]
-    edr-heading.banner__title.heading.heading--1
-    ~ p.banner__description::after {
-    color: rgb(58, 71, 78);
-    font-size: 1.5rem;
-  }
+.sr-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
 `);
