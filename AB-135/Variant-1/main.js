@@ -36,7 +36,9 @@ window.ab135.subTitleCopy =
 
 window.ab135.baseImagePath =
   window.ab135.baseImagePath ||
-  '//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/3ffe8c1bbecedc786b8451488ce9e69f/EDR_NZ-app.svg';
+  "//images.ctfassets.net/28bohp801cze/qQGqRWGbL4Hk25wZs54vb/08567c8fe158e6e6445699ef200e2ac9/Phone_clearcut.png";
+
+window.ab135.imageFormat = window.ab135.imageFormat || "webp";
 
 window.ab135.dynamic =
   window.ab135.dynamic ||
@@ -78,10 +80,10 @@ window.ab135.dynamic =
             <edr-image _ngcontent-ng-c2101707264 _nghost-ng-c2101707264 class="image" style="width: auto;">
               <div class="image__container">
                 <picture>
-                  <source media="(min-width:1440px)" srcset="${window.ab135.baseImagePath}?fm=avif&w=605&h=436&fit=fill&q=100">
-                  <source media="(min-width:768px)" srcset="${window.ab135.baseImagePath}?fm=avif&w=605&h=436&fit=fill&q=100">
-                  <source media="(min-width:1440px)" srcset="${window.ab135.baseImagePath}?fm=avif&w=375&h=261&fit=fill&q=100">
-                  <img src="${window.ab135.baseImagePath}?fm=avif&w=375&h=261&fit=fill&q=100" alt="Mobile phone being held">
+                  <source media="(min-width:1440px)" srcset="${window.ab135.baseImagePath}?fm=${window.ab135.imageFormat}&w=605&h=436&fit=fill&q=100">
+                  <source media="(min-width:768px)" srcset="${window.ab135.baseImagePath}?fm=${window.ab135.imageFormat}&w=568&h=409&fit=fill&q=100">
+                  <source srcset="${window.ab135.baseImagePath}?fm=${window.ab135.imageFormat}&w=340&h=280&fit=fill&q=100">
+                  <img src="${window.ab135.baseImagePath}?fm=${window.ab135.imageFormat}" alt="Mobile phone being held in a hand">
                 </picture>
               </div>
             </edr-image>
@@ -148,6 +150,10 @@ html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body {
   justify-content: initial;
 }
 
+html:not(#ab135)[data-web-ab135="1"] .banner__body-info-content .banner__title {
+  white-space: normal;
+}
+
 html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body-media {
   align-items: center;
   -ms-display: flex;
@@ -165,6 +171,8 @@ html:not(#ab135)[data-web-ab135="1"]
   max-width: 100%;
   width: auto;
 }
+
+
 
 /* Padding */
 
@@ -188,6 +196,18 @@ html:not(#ab135)[data-web-ab135="1"]
   }
 }
 
+
+.sr-hidden {
+  display: none;
+}
+
+
+
+`);
+
+/*
+
+
 .sr-hidden {
   position: absolute;
   width: 1px;
@@ -198,5 +218,4 @@ html:not(#ab135)[data-web-ab135="1"]
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
-
-`);
+*/

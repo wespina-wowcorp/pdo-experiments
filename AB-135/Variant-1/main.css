@@ -8,6 +8,10 @@ html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body {
   justify-content: initial;
 }
 
+html:not(#ab135)[data-web-ab135="1"] .banner__body-info-content .banner__title {
+  white-space: normal;
+}
+
 html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body-media {
   align-items: center;
   -ms-display: flex;
@@ -34,6 +38,9 @@ html:not(#ab135)[data-web-ab135="1"]
   padding-bottom: 0 !important;
 }
 
+.sr-hidden {
+  display: none;
+}
 
 @media screen and (min-width: 768px) {
   html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body-media {
@@ -49,13 +56,3 @@ html:not(#ab135)[data-web-ab135="1"]
   }
 }
 
-.sr-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
