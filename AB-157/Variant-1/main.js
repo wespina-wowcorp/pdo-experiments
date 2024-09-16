@@ -138,7 +138,7 @@ window.ab157.dynamic =
         if (mainImage && cta) {
           mainImage.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
-            document.location.href = `${cta.href}${queryStringUnifier}ab157-1-position=${indexToUpdate}`;
+            document.location.href = `${cta.href}${queryStringUnifier}ab157-1-position=${indexToUpdate}&utm_ab157=1`;
           });
         }
 
@@ -151,7 +151,7 @@ window.ab157.dynamic =
         if (cta) {
           cta.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
-            document.location.href = `${cta.href}${queryStringUnifier}ab157-1-position=${indexToUpdate}`;
+            document.location.href = `${cta.href}${queryStringUnifier}ab157-1-position=${indexToUpdate}&utm_ab157=1`;
           });
         }
       };

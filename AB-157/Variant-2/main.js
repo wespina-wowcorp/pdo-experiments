@@ -118,8 +118,6 @@ window.ab157.dynamic =
         const cta = mainContentContainer.querySelector(
           ":scope section .cta-block a.hero-button"
         );
-        console.log("🚀 ~ swapCarouselTiles ~ cta:", cta)
-        console.log("🚀 ~ swapCarouselTiles ~ cta href:", cta.href)
 
         let queryStringUnifier = "?";
 
@@ -129,13 +127,12 @@ window.ab157.dynamic =
 
         nodesFragment1.appendChild(mainImage);
         image.replaceWith(nodesFragment1);
-        
 
         // copy over click events
         if (mainImage && cta) {
           mainImage.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
-            document.location.href = `${cta.href}${queryStringUnifier}ab157-2-position=${indexToUpdate}`;
+            document.location.href = `${cta.href}${queryStringUnifier}ab157-2-position=${indexToUpdate}&utm_ab157=1`;
           });
         }
 
@@ -148,7 +145,7 @@ window.ab157.dynamic =
         if (cta) {
           cta.addEventListener("click", () => {
             originalCarouselItems[newIndex].mainImage.click();
-            document.location.href = `${cta.href}${queryStringUnifier}ab157-2-position=${indexToUpdate}`;
+            document.location.href = `${cta.href}${queryStringUnifier}ab157-2-position=${indexToUpdate}&utm_ab157=1`;
           });
         }
       };

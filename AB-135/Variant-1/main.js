@@ -52,9 +52,13 @@ window.ab135.dynamic =
         'edr-section[data-contentful-entry-id="1MEYNrqvRdEDCfQ52E0xQa"]'
       );
 
+      console.log('>> BEFORE >>>')
+
       if (!topBanner) {
         return;
       }
+
+      console.log('>>>>>> RUNNING >>>>>>')
 
       const heading = document.querySelector(
         ".banner__body-info-content edr-heading h1"
@@ -178,7 +182,7 @@ html:not(#ab135)[data-web-ab135="1"]
 
 html:not(#ab135)[data-web-ab135="1"]
   edr-section[_nghost-ng-c1460657692=""]
-  > section {
+  > section:has(.ab135.banner__body-media) {
   padding-bottom: 0 !important;
 }
 

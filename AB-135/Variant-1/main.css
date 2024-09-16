@@ -34,7 +34,7 @@ html:not(#ab135)[data-web-ab135="1"]
 
 html:not(#ab135)[data-web-ab135="1"]
   edr-section[_nghost-ng-c1460657692=""]
-  > section {
+  > section:has(.ab135.banner__body-media) {
   padding-bottom: 0 !important;
 }
 
@@ -55,4 +55,3 @@ html:not(#ab135)[data-web-ab135="1"]
     justify-content: flex-end;
   }
 }
-
