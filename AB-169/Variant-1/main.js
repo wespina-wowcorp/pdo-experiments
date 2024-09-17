@@ -1,4 +1,3 @@
-
 // ==UserScript==
 // @name         AB-169: Variant 1
 // @namespace    https://woolworths-agile.atlassian.net/browse/AB-169
@@ -6,12 +5,11 @@
 // @description  CPP Reconfiguration V4
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials
-
 // @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-1/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(' >>>>>> AB-169 Running >>>>>>'); 
+console.log(" >>>>>> AB-169 Running >>>>>>");
 
 /* COPY FROM BELOW TO OPTIMIZELY */
 
@@ -23,10 +21,8 @@ window.ab169.dynamic =
   window.ab169.dynamic ||
   (() => {
     new MutationObserver((mutationList, observer) => {
-
       /* INSERT CODE HERE */
-
-    })
+    });
   });
 
 try {
@@ -38,4 +34,3 @@ try {
 } catch (error) {
   console.error("ab169:", error);
 }
-  
