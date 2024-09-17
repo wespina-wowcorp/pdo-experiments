@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { input, confirm  } from "@inquirer/prompts";
+import { input, confirm } from "@inquirer/prompts";
 import fs from "node:fs";
 import colors from "colors";
 
@@ -24,7 +24,7 @@ const urlMatch = await input({
   message: "Enter URL for experiment",
 });
 
-const answer = await confirm({ message: 'Any more URLs?' });
+const answer = await confirm({ message: "Any more URLs?" });
 
 const variants = parseInt(numberOfVariants);
 
@@ -51,17 +51,18 @@ variantArray.forEach((variant) => {
   }
 
   const content = `
-  // ==UserScript==
-  // @name         ${testId}: Variant ${variantNumber}
-  // @namespace    https://woolworths-agile.atlassian.net/browse/${testId}
-  // @version      ${testId}_variant_${variantNumber}
-  // @description  ${description}
-  // @author       Wilson
-  // @match        {{url_match}}
-  // @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
-  // ==/UserScript==
+// ==UserScript==
+// @name         ${testId}: Variant ${variantNumber}
+// @namespace    https://woolworths-agile.atlassian.net/browse/${testId}
+// @version      ${testId}_variant_${variantNumber}
+// @description  ${description}
+// @author       Wilson
+// @match        {{url_match}}
+// @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
+// @grant        GM_addStyle
+// ==/UserScript==
 
-  document.documentElement.dataset.webAb${testNumber} = "${variantNumber}";
+document.documentElement.dataset.webAb${testNumber} = "${variantNumber}";
   `;
 
   try {
