@@ -144,16 +144,7 @@ try {
 }
 
 GM_addStyle(`
-html:not(#ab135)[data-web-ab135="1"] .ab135.banner__body {
-  height: 100%;
-  align-items: initial;
-  -ms-display: flex;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: initial;
-}
-
+/* Fix line height for hidden text */
 html:not(#ab135)[data-web-ab135="1"] .banner__body-info-content .banner__title {
   white-space: normal;
 }
@@ -177,8 +168,6 @@ html:not(#ab135)[data-web-ab135="1"]
 }
 
 
-
-/* Padding */
 
 html:not(#ab135)[data-web-ab135="1"]
   edr-section[_nghost-ng-c1460657692=""]
