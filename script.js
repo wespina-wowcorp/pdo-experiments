@@ -24,7 +24,14 @@ const urlMatch = await input({
   message: "Enter URL for experiment",
 });
 
+let urlMatch2 = null;
+
 const answer = await confirm({ message: "Any more URLs?" });
+if (answer) {
+  urlMatch2 = await input({
+    message: "Enter URL for experiment",
+  });
+}
 
 const variants = parseInt(numberOfVariants);
 
@@ -57,12 +64,39 @@ variantArray.forEach((variant) => {
 // @version      ${testId}_variant_${variantNumber}
 // @description  ${description}
 // @author       Wilson
-// @match        {{url_match}}
+// @match        ${urlMatch}
+${urlMatch2 ? '// @match        ' + urlMatch2 : ''}
 // @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
+console.log(' >>>>>> AB-${testNumber} Running >>>>>>'); 
+
+/* COPY FROM BELOW TO OPTIMIZELY */
+
 document.documentElement.dataset.webAb${testNumber} = "${variantNumber}";
+
+window.ab${testNumber} = window.ab${testNumber} || {};
+
+window.ab${testNumber}.dynamic =
+  window.ab${testNumber}.dynamic ||
+  (() => {
+    new MutationObserver((mutationList, observer) => {
+
+      /* INSERT CODE HERE */
+
+    })
+  });
+
+try {
+  if (document.body == null) {
+    document.addEventListener("DOMContentLoaded", window.ab${testNumber}.dynamic);
+  } else {
+    window.ab${testNumber}.dynamic();
+  }
+} catch (error) {
+  console.error("ab${testNumber}:", error);
+}
   `;
 
   try {
