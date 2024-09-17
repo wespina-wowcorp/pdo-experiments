@@ -41,14 +41,9 @@ if (!variants || variants > MAX_ALLOWABLE_VARIANTS) {
   throw new Error("Invalid number of variants");
 }
 
-LOG_MAGENTA("***** GENERATING FILES *******");
-
 const variantArray = [...Array(variants).keys()];
 
 variantArray.forEach((variant) => {
-  // TODO - add colours
-  // TODO - More error handling
-  // TODO - Multiple prompts for @match https://www.npmjs.com/package/inquirer
   const variantNumber = variant + 1;
   const folderName = `${testId.trim()}/Variant-${variantNumber}`;
   const testNumber = testId.match(/AB-(.*)/)?.[1];
@@ -57,7 +52,7 @@ variantArray.forEach((variant) => {
     throw new Error('Test ID must start with "AB-"');
   }
 
-  const content = 
+  const content =
 `// ==UserScript==
 // @name         ${testId}: Variant ${variantNumber}
 // @namespace    https://woolworths-agile.atlassian.net/browse/${testId}
@@ -69,7 +64,7 @@ variantArray.forEach((variant) => {
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(' >>>>>> AB-${testNumber} Running >>>>>>'); 
+console.log(' >>>>>> AB-${testNumber} Running >>>>>>');
 
 /* COPY FROM BELOW TO OPTIMIZELY */
 
