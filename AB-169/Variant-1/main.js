@@ -17,6 +17,61 @@ document.documentElement.dataset.webAb169 = "1";
 
 window.ab169 = window.ab169 || {};
 
+window.ab169.numberOfCPPTiles = window.ab169.numberOfCPPTiles || 8;
+
+window.ab169.tileMapping = window.ab169.tileMapping || {
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 10,
+  5: 11,
+  6: 12,
+  7: 13,
+};
+
+window.ab169.changeContent =
+  window.ab169.changeContent ||
+  ((targetElement, html) => {
+    const documentFragment = document
+      .createRange()
+      .createContextualFragment(html);
+    targetElement.replaceWith(documentFragment);
+  });
+
+window.ab169.addPromotedTagToTiles =
+  window.ab169.addPromotedTagToTiles ||
+  ((tiles) => {
+    tiles.forEach((tile) => {
+      const imageLink = tile.querySelector(
+        ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
+      );
+
+      if (imageLink) {
+        const div = document.createElement("div");
+        imageLink.appendChild(div);
+        window.ab169.changeContent(
+          div,
+          `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted">Promoted</div>`
+        );
+      }
+    });
+  });
+
+window.ab169.exchangeElements =
+  window.ab169.exchangeElements ||
+  ((element1, element2) => {
+    if (element1 === element2) return;
+
+    const clonedElement1 = element1.cloneNode(true);
+    const clonedElement2 = element2.cloneNode(true);
+
+    element2.parentNode.replaceChild(clonedElement1, element2);
+    element1.parentNode.replaceChild(clonedElement2, element1);
+
+    return clonedElement1;
+  });
+
 window.ab169.dynamic =
   window.ab169.dynamic ||
   (() => {
@@ -36,20 +91,33 @@ window.ab169.dynamic =
         return;
       }
 
-      const childNodes = specialsProductGrid.childNodes;
-      // Filter out comment nodes
-      const filteredChildNodes = Array.from(childNodes).filter(
-        (node) => node.nodeType !== Node.COMMENT_NODE
+      observer.disconnect();
+
+      const childNodes = specialsProductGrid.children; // does not include comment elements
+      const CPPTiles = Array.from(childNodes).slice(
+        0,
+        window.ab169.numberOfCPPTiles
       );
 
-      console.log("Filtered child nodes:", filteredChildNodes);
+      window.ab169.addPromotedTagToTiles(CPPTiles);
 
-      // get tiles 16-24
-      // add promoted UI element to each tile
-      // move tiles 16-20 to positions 1 - 4
-      // move tiles 21-24 to positions 5 - 8
+      const mapping = window.ab169.tileMapping;
+
+      for (const tile in mapping) {
+        window.ab169.exchangeElements(
+          childNodes[tile],
+          childNodes[mapping[tile]]
+        );
+      }
+
+      // TODO - check tracking still works after swap
 
       /* INSERT CODE HERE */
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
     }).observe(document.body, {
       childList: true,
       subtree: true,
