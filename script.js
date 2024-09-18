@@ -52,14 +52,15 @@ variantArray.forEach((variant) => {
     throw new Error('Test ID must start with "AB-"');
   }
 
-  const content =
-`// ==UserScript==
+  const content = `// ==UserScript==
 // @name         ${testId}: Variant ${variantNumber}
 // @namespace    https://woolworths-agile.atlassian.net/browse/${testId}
 // @version      ${testId}_variant_${variantNumber}
 // @description  ${description}
 // @author       Wilson
-// @match        ${urlMatch}${urlMatch2 ? '\n// @match        ' + urlMatch2 : ''}
+// @match        ${urlMatch}${
+    urlMatch2 ? "\n// @match        " + urlMatch2 : ""
+  }
 // @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -79,10 +80,10 @@ window.ab${testNumber}.dynamic =
 
       /* INSERT CODE HERE */
 
-    })
-  }).observe(document.body, {
-    childList: true,
-    subtree: true,
+    }).observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   });
 
 try {
