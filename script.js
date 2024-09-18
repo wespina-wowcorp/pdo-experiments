@@ -80,6 +80,9 @@ window.ab${testNumber}.dynamic =
       /* INSERT CODE HERE */
 
     })
+  }).observe(document.body, {
+    childList: true,
+    subtree: true,
   });
 
 try {
