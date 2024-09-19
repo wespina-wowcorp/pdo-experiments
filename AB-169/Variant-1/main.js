@@ -36,7 +36,7 @@ document.documentElement.dataset.webAb169 = "1";
  */
 
 /**
- * @typedef {(tiles: HTMLElement[]) => void} AddPromotedTagToTiles
+ * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
  */
 
 /**
@@ -58,7 +58,7 @@ const WINDOW = window["ab169"] || {};
 const numberOfCPPTiles = 8
 
 /** @type {Ab169Object['tileMapping']} */
-const mapping = {
+const tileMapping = {
   0: 0,
   1: 1,
   2: 2,
@@ -71,21 +71,7 @@ const mapping = {
 
 WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || numberOfCPPTiles;
 
-WINDOW.tileMapping = WINDOW.tileMapping || 
-/** @type {Ab169Object['tileMapping']} */
-({
-  0: '1',
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 10,
-  5: 11,
-  6: 12,
-  7: 13,
-})
-
-// WINDOW.tileMapping = WINDOW.tileMapping || mapping;
-
+WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
 
 WINDOW.changeContent =
   WINDOW.changeContent ||
@@ -101,7 +87,7 @@ WINDOW.changeContent =
 
 WINDOW.addPromotedTagToTiles =
   WINDOW.addPromotedTagToTiles ||
-  ((/** @type {HTMLElement[]} */ tiles) => {
+  ((/** @type {Element[]} */ tiles) => {
     tiles.forEach((tile) => {
       const imageLink = tile.querySelector(
         ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
@@ -120,20 +106,26 @@ WINDOW.addPromotedTagToTiles =
 
 WINDOW.exchangeElements =
   WINDOW.exchangeElements ||
+  /** @type {ExchangeElements} */
   ((element1, element2) => {
-    if (element1 === element2) return;
+    if (element1 === element2 || !element1 || !element2) return;
 
     const clonedElement1 = element1.cloneNode(true);
     const clonedElement2 = element2.cloneNode(true);
 
-    element2.parentNode.replaceChild(clonedElement1, element2);
-    element1.parentNode.replaceChild(clonedElement2, element1);
+    if (element2.parentNode) {
+      element2.parentNode.replaceChild(clonedElement1, element2);
+    }
+    if (element1.parentNode) {
+      element1.parentNode.replaceChild(clonedElement2, element1);
+    }
 
     return clonedElement1;
   });
 
 WINDOW.dynamic =
   WINDOW.dynamic ||
+  /** @type {Dynamic} */
   (() => {
     new MutationObserver((mutationList, observer) => {
       if (!location.pathname.startsWith("/shop/specials")) {

@@ -5,11 +5,12 @@
 // @description  Optimizing Boost Banner
 // @author       Wilson
 // @match        https://www.everydayrewards.co.nz/boosts
+// @match        https://www-uat.everydayrewards.co.nz/boosts
 // @require      file://C:/Users/1442718/Development/overrides/AB-135/Variant-1/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(">>>> AB-135 >>>>");
+console.log(">>>> AB-135! >>>>");
 
 // ****************************************
 
@@ -51,14 +52,13 @@ window.ab135.dynamic =
       const topBanner = document.querySelector(
         'edr-section[data-contentful-entry-id="1MEYNrqvRdEDCfQ52E0xQa"]'
       );
+      const experimentImage = document.querySelector(".ab135");
 
-      console.log('>> BEFORE >>>')
-
-      if (!topBanner) {
+      if (!topBanner || experimentImage) {
         return;
       }
 
-      console.log('>>>>>> RUNNING >>>>>>')
+      observer.disconnect();
 
       const heading = document.querySelector(
         ".banner__body-info-content edr-heading h1"
@@ -126,7 +126,10 @@ window.ab135.dynamic =
         );
       }
 
-      observer.disconnect();
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
     }).observe(document.body, {
       childList: true,
       subtree: true,
