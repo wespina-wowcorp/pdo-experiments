@@ -29,25 +29,10 @@ document.documentElement.dataset.webAb169 = "1";
 
 /**
  * @typedef {Record<number, number>} TileMapping
- */
-
-/**
  * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
- */
-
-/**
  * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
- */
-
-/**
- * @typedef {(element1: HTMLElement, element2: HTMLElement) => HTMLElement | void} ExchangeElements
- */
-
-/**
+ * @typedef {(element1: Element, element2: Element) => Node | void} ExchangeElements
  * @typedef {() => void} Dynamic
- */
-
-/**
  * @typedef {Window & Ab169Object} CustomWindow
  */
 
@@ -55,9 +40,9 @@ document.documentElement.dataset.webAb169 = "1";
 const WINDOW = window["ab169"] || {};
 
 /** @type {Ab169Object['numberOfCPPTiles']} */
-const numberOfCPPTiles = 8
+const numberOfCPPTiles = 8;
 
-/** @type {Ab169Object['tileMapping']} */
+/** @type {TileMapping} */
 const tileMapping = {
   0: 0,
   1: 1,
@@ -69,106 +54,103 @@ const tileMapping = {
   7: 13,
 };
 
-WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || numberOfCPPTiles;
+/** @type {ChangeContent} */
+const changeContent = (targetElement, html) => {
+  const documentFragment = document
+  .createRange()
+  .createContextualFragment(html);
+  targetElement.replaceWith(documentFragment);
+};
 
-WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
+/** @type {AddPromotedTagToTiles} */
+const addPromotedTagToTiles = (tiles) => {
+  tiles.forEach((tile) => {
+    const imageLink = tile.querySelector(
+      ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
+    );
 
-WINDOW.changeContent =
-  WINDOW.changeContent ||
-  /** @type {ChangeContent} */
-  (
-    (targetElement, html) => {
-      const documentFragment = document
-        .createRange()
-        .createContextualFragment(html);
-      targetElement.replaceWith(documentFragment);
-    }
-  );
-
-WINDOW.addPromotedTagToTiles =
-  WINDOW.addPromotedTagToTiles ||
-  ((/** @type {Element[]} */ tiles) => {
-    tiles.forEach((tile) => {
-      const imageLink = tile.querySelector(
-        ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
+    if (imageLink) {
+      const div = document.createElement("div");
+      imageLink.appendChild(div);
+      WINDOW.changeContent(
+        div,
+        `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
       );
-
-      if (imageLink) {
-        const div = document.createElement("div");
-        imageLink.appendChild(div);
-        WINDOW.changeContent(
-          div,
-          `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
-        );
-      }
-    });
+    }
   });
+};
 
-WINDOW.exchangeElements =
-  WINDOW.exchangeElements ||
-  /** @type {ExchangeElements} */
-  ((element1, element2) => {
-    if (element1 === element2 || !element1 || !element2) return;
+/** @type {ExchangeElements} */
+const exchangeElements = (element1, element2) => {
+  if (element1 === element2 || !element1 || !element2) return;
 
-    const clonedElement1 = element1.cloneNode(true);
-    const clonedElement2 = element2.cloneNode(true);
+  const clonedElement1 = element1.cloneNode(true);
+  const clonedElement2 = element2.cloneNode(true);
 
-    if (element2.parentNode) {
-      element2.parentNode.replaceChild(clonedElement1, element2);
+  if (element2.parentNode) {
+    element2.parentNode.replaceChild(clonedElement1, element2);
+  }
+  if (element1.parentNode) {
+    element1.parentNode.replaceChild(clonedElement2, element1);
+  }
+
+  return clonedElement1;
+}
+
+/** @type {Dynamic} */
+const dynamic = () => {
+  new MutationObserver((mutationList, observer) => {
+    if (!location.pathname.startsWith("/shop/specials")) {
+      return observer.disconnect();
     }
-    if (element1.parentNode) {
-      element1.parentNode.replaceChild(clonedElement2, element1);
+
+    const specialsProductGrid = document.querySelector(
+      "wnz-search .contentContainer-main product-grid"
+    );
+    const includesSpecialsGrid = mutationList.some(
+      (mutation) => mutation.target === specialsProductGrid
+    );
+
+    if (!includesSpecialsGrid) {
+      return;
     }
 
-    return clonedElement1;
-  });
+    observer.disconnect();
 
-WINDOW.dynamic =
-  WINDOW.dynamic ||
-  /** @type {Dynamic} */
-  (() => {
-    new MutationObserver((mutationList, observer) => {
-      if (!location.pathname.startsWith("/shop/specials")) {
-        return observer.disconnect();
-      }
+    if (!specialsProductGrid) return;
+    const childNodes = specialsProductGrid.children; // does not include comment elements
+    const CPPTiles = Array.from(childNodes).slice(
+      0,
+      WINDOW.numberOfCPPTiles
+    );
+    const mapping = WINDOW.tileMapping;
 
-      const specialsProductGrid = document.querySelector(
-        "wnz-search .contentContainer-main product-grid"
-      );
-      const includesSpecialsGrid = mutationList.some(
-        (mutation) => mutation.target === specialsProductGrid
-      );
+    WINDOW.addPromotedTagToTiles(CPPTiles);
 
-      if (!includesSpecialsGrid) {
-        return;
-      }
+    for (const tile in mapping) {
+      WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
+    }
 
-      observer.disconnect();
+    // TODO - check tracking still works after swap
 
-      if (!specialsProductGrid) return;
-      const childNodes = specialsProductGrid.children; // does not include comment elements
-      const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
-      const mapping = WINDOW.tileMapping;
+    /* INSERT CODE HERE */
 
-      WINDOW.addPromotedTagToTiles(CPPTiles);
-
-      for (const tile in mapping) {
-        WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
-      }
-
-      // TODO - check tracking still works after swap
-
-      /* INSERT CODE HERE */
-
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
-    }).observe(document.body, {
+    observer.observe(document.body, {
       childList: true,
       subtree: true,
     });
+  }).observe(document.body, {
+    childList: true,
+    subtree: true,
   });
+}
+
+WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || numberOfCPPTiles;
+WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
+WINDOW.changeContent = WINDOW.changeContent || changeContent;
+WINDOW.addPromotedTagToTiles = WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
+WINDOW.exchangeElements = WINDOW.exchangeElements || exchangeElements;
+WINDOW.dynamic = WINDOW.dynamic || dynamic;
 
 try {
   if (document.body == null) {
@@ -179,6 +161,10 @@ try {
 } catch (error) {
   console.error("ab169:", error);
 }
+
+
+
+
 
 // @ts-ignore
 GM_addStyle(`
