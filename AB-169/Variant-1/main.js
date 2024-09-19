@@ -1,3 +1,5 @@
+// @ts-check
+
 // ==UserScript==
 // @name         AB-169: Variant 1
 // @namespace    https://woolworths-agile.atlassian.net/browse/AB-169
@@ -9,19 +11,25 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(" >>>>>> AB-169 Running >>>>>>");
+console.log(" >>>>>> AB-169 Variant 1 Running >>>>>>");
 
 /* COPY FROM BELOW TO OPTIMIZELY */
 
 document.documentElement.dataset.webAb169 = "1";
 
-window.ab169 = window.ab169 || {};
+window["ab168"] = window["ab168"] || {};
 
-window.ab169.numberOfCPPTiles = window.ab169.numberOfCPPTiles || 8;
+window["ab168"].numberOfCPPTiles = window["ab168"].numberOfCPPTiles || 8;
 
-window.ab169.tileMapping = window.ab169.tileMapping || {
+/**
+  @typedef Mapping
+  @type {Record<number, number>}
+ /
+
+/** @type Mapping */
+const mapping = {
   0: 0,
-  1: 1,
+  1: "1",
   2: 2,
   3: 3,
   4: 10,
@@ -30,8 +38,24 @@ window.ab169.tileMapping = window.ab169.tileMapping || {
   7: 13,
 };
 
-window.ab169.changeContent =
-  window.ab169.changeContent ||
+
+
+window["ab168"].tileMapping = 
+/** @type {Mapping} */
+
+{
+    0: 0,
+    1: "n1",
+    2: 2,
+    3: 3,
+    4: 10,
+    5: 11,
+    6: 12,
+    7: 13,
+  };
+
+window["ab168"].changeContent =
+  window["ab168"].changeContent ||
   ((targetElement, html) => {
     const documentFragment = document
       .createRange()
@@ -39,8 +63,8 @@ window.ab169.changeContent =
     targetElement.replaceWith(documentFragment);
   });
 
-window.ab169.addPromotedTagToTiles =
-  window.ab169.addPromotedTagToTiles ||
+window["ab168"].addPromotedTagToTiles =
+  window["ab168"].addPromotedTagToTiles ||
   ((tiles) => {
     tiles.forEach((tile) => {
       const imageLink = tile.querySelector(
@@ -50,16 +74,16 @@ window.ab169.addPromotedTagToTiles =
       if (imageLink) {
         const div = document.createElement("div");
         imageLink.appendChild(div);
-        window.ab169.changeContent(
+        window["ab168"].changeContent(
           div,
-          `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted">Promoted</div>`
+          `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
         );
       }
     });
   });
 
-window.ab169.exchangeElements =
-  window.ab169.exchangeElements ||
+window["ab168"].exchangeElements =
+  window["ab168"].exchangeElements ||
   ((element1, element2) => {
     if (element1 === element2) return;
 
@@ -72,8 +96,8 @@ window.ab169.exchangeElements =
     return clonedElement1;
   });
 
-window.ab169.dynamic =
-  window.ab169.dynamic ||
+window["ab168"].dynamic =
+  window["ab168"].dynamic ||
   (() => {
     new MutationObserver((mutationList, observer) => {
       if (!location.pathname.startsWith("/shop/specials")) {
@@ -93,18 +117,18 @@ window.ab169.dynamic =
 
       observer.disconnect();
 
+      if (!specialsProductGrid) return;
       const childNodes = specialsProductGrid.children; // does not include comment elements
       const CPPTiles = Array.from(childNodes).slice(
         0,
-        window.ab169.numberOfCPPTiles
+        window["ab168"].numberOfCPPTiles
       );
+      const mapping = window["ab168"].tileMapping;
 
-      window.ab169.addPromotedTagToTiles(CPPTiles);
-
-      const mapping = window.ab169.tileMapping;
+      window["ab168"].addPromotedTagToTiles(CPPTiles);
 
       for (const tile in mapping) {
-        window.ab169.exchangeElements(
+        window["ab168"].exchangeElements(
           childNodes[tile],
           childNodes[mapping[tile]]
         );
@@ -126,10 +150,17 @@ window.ab169.dynamic =
 
 try {
   if (document.body == null) {
-    document.addEventListener("DOMContentLoaded", window.ab169.dynamic);
+    document.addEventListener("DOMContentLoaded", window["ab168"].dynamic);
   } else {
-    window.ab169.dynamic();
+    window["ab168"].dynamic();
   }
 } catch (error) {
   console.error("ab169:", error);
 }
+
+// @ts-ignore
+GM_addStyle(`
+  html:not(#ab135)[data-web-ab169="1"] cdx-card:has(product-stamp-grid .ab169-promoted) {
+    background-color: pink;
+  }
+`);

@@ -53,18 +53,9 @@ window.ab172.dynamic =
         }
       }, 0);
 
-      // requestAnimationFrame(() => {
-      //   const subheading = dynamicContent.querySelector(
-      //     ':scope .dynamic-content-row dc-html p[style="text-align:center"]'
-      //   );
-      //   if (subheading) {
-      //     subheading.textContent = "THIS IS A TEST WITH RAF";
-      //   }
-      // })
+      // for login use: https://www.woolworths.co.nz/shop/securelogin
 
-      // if (subheading) {
-      //   subheading.textContent = "THIS IS A TEST";
-      // }
+
       // create p tag document fragment
       // hide first tag with aria-hidden and display none
 
