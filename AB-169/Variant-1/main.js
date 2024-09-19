@@ -6,7 +6,7 @@
 // @version      AB-169_variant_1
 // @description  CPP Reconfiguration V4
 // @author       Wilson
-// @match        https://www.woolworths.co.nz/shop/specials*
+// @match        https://wwWINDOW.woolworths.co.nz/shop/specials*
 // @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-1/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -17,20 +17,30 @@ console.log(" >>>>>> AB-169 Variant 1 Running >>>>>>");
 
 document.documentElement.dataset.webAb169 = "1";
 
-window["ab168"] = window["ab168"] || {};
-
-window["ab168"].numberOfCPPTiles = window["ab168"].numberOfCPPTiles || 8;
 
 /**
-  @typedef Mapping
-  @type {Record<number, number>}
- /
+ * @typedef {object} Ab169Object
+ * @property {number} numberOfCPPTiles
+ * @property {Record<number, number>} tileMapping // TODO - why does this not error?
+ * @property {(_: string, __: string) => void} changeContent
+ * @property {() => void} addPromotedTagToTiles
+ * @property {() => void} exchangeElements
+ * @property {() => void} dynamic
+ */
 
-/** @type Mapping */
-const mapping = {
+/**
+ * @typedef {Window & Ab169Object} CustomWindow
+ */
+
+/** @type {CustomWindow} */
+const WINDOW = window["ab169"] || {};
+
+WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || 8;
+
+WINDOW.tileMapping = WINDOW.tileMapping || {
   0: 0,
-  1: "1",
-  2: 2,
+  1: "n1",
+  2: null,
   3: 3,
   4: 10,
   5: 11,
@@ -38,24 +48,14 @@ const mapping = {
   7: 13,
 };
 
-
-
-window["ab168"].tileMapping = 
-/** @type {Mapping} */
-
-{
-    0: 0,
-    1: "n1",
-    2: 2,
-    3: 3,
-    4: 10,
-    5: 11,
-    6: 12,
-    7: 13,
-  };
-
-window["ab168"].changeContent =
-  window["ab168"].changeContent ||
+/**
+ * @typedef {object} ChangeContent
+ * @param {string} targetElement
+ * @param {string} html
+ * @return void
+ */
+WINDOW.changeContent =
+  WINDOW.changeContent ||
   ((targetElement, html) => {
     const documentFragment = document
       .createRange()
@@ -63,9 +63,9 @@ window["ab168"].changeContent =
     targetElement.replaceWith(documentFragment);
   });
 
-window["ab168"].addPromotedTagToTiles =
-  window["ab168"].addPromotedTagToTiles ||
-  ((tiles) => {
+WINDOW.addPromotedTagToTiles =
+  WINDOW.addPromotedTagToTiles ||
+  ((/** @type {HTMLElement[]} */ tiles) => {
     tiles.forEach((tile) => {
       const imageLink = tile.querySelector(
         ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
@@ -74,7 +74,7 @@ window["ab168"].addPromotedTagToTiles =
       if (imageLink) {
         const div = document.createElement("div");
         imageLink.appendChild(div);
-        window["ab168"].changeContent(
+        WINDOW.changeContent(
           div,
           `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
         );
@@ -82,8 +82,8 @@ window["ab168"].addPromotedTagToTiles =
     });
   });
 
-window["ab168"].exchangeElements =
-  window["ab168"].exchangeElements ||
+WINDOW.exchangeElements =
+  WINDOW.exchangeElements ||
   ((element1, element2) => {
     if (element1 === element2) return;
 
@@ -96,8 +96,8 @@ window["ab168"].exchangeElements =
     return clonedElement1;
   });
 
-window["ab168"].dynamic =
-  window["ab168"].dynamic ||
+WINDOW.dynamic =
+  WINDOW.dynamic ||
   (() => {
     new MutationObserver((mutationList, observer) => {
       if (!location.pathname.startsWith("/shop/specials")) {
@@ -119,19 +119,13 @@ window["ab168"].dynamic =
 
       if (!specialsProductGrid) return;
       const childNodes = specialsProductGrid.children; // does not include comment elements
-      const CPPTiles = Array.from(childNodes).slice(
-        0,
-        window["ab168"].numberOfCPPTiles
-      );
-      const mapping = window["ab168"].tileMapping;
+      const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
+      const mapping = WINDOW.tileMapping;
 
-      window["ab168"].addPromotedTagToTiles(CPPTiles);
+      WINDOW.addPromotedTagToTiles(CPPTiles);
 
       for (const tile in mapping) {
-        window["ab168"].exchangeElements(
-          childNodes[tile],
-          childNodes[mapping[tile]]
-        );
+        WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
       }
 
       // TODO - check tracking still works after swap
@@ -150,9 +144,9 @@ window["ab168"].dynamic =
 
 try {
   if (document.body == null) {
-    document.addEventListener("DOMContentLoaded", window["ab168"].dynamic);
+    document.addEventListener("DOMContentLoaded", WINDOW.dynamic);
   } else {
-    window["ab168"].dynamic();
+    WINDOW.dynamic();
   }
 } catch (error) {
   console.error("ab169:", error);
@@ -160,7 +154,7 @@ try {
 
 // @ts-ignore
 GM_addStyle(`
-  html:not(#ab135)[data-web-ab169="1"] cdx-card:has(product-stamp-grid .ab169-promoted) {
+  html:not(#ab135)[data-web-ab169="1"] cdx-card:has(product-stamp-grid ['ab169']-promoted) {
     background-color: pink;
   }
 `);
