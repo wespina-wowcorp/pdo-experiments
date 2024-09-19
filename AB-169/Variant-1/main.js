@@ -6,8 +6,8 @@
 // @version      AB-169_variant_1
 // @description  CPP Reconfiguration V4
 // @author       Wilson
-// @match        https://wwWINDOW.woolworths.co.nz/shop/specials*
-// @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-1/main.js
+// @match        https://www.woolworths.co.nz/shop/specials*
+// @require      file:///Users/wilsonespina/Development/woolworths/pdo-experiments/AB-169/Variant-1/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
@@ -17,15 +17,34 @@ console.log(" >>>>>> AB-169 Variant 1 Running >>>>>>");
 
 document.documentElement.dataset.webAb169 = "1";
 
-
 /**
  * @typedef {object} Ab169Object
  * @property {number} numberOfCPPTiles
- * @property {Record<number, number>} tileMapping // TODO - why does this not error?
- * @property {(_: string, __: string) => void} changeContent
- * @property {() => void} addPromotedTagToTiles
- * @property {() => void} exchangeElements
- * @property {() => void} dynamic
+ * @property {TileMapping} tileMapping
+ * @property {ChangeContent} changeContent
+ * @property {AddPromotedTagToTiles} addPromotedTagToTiles
+ * @property {ExchangeElements} exchangeElements
+ * @property {Dynamic} dynamic
+ */
+
+/**
+ * @typedef {Record<number, number>} TileMapping
+ */
+
+/**
+ * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
+ */
+
+/**
+ * @typedef {(tiles: HTMLElement[]) => void} AddPromotedTagToTiles
+ */
+
+/**
+ * @typedef {(element1: HTMLElement, element2: HTMLElement) => HTMLElement | void} ExchangeElements
+ */
+
+/**
+ * @typedef {() => void} Dynamic
  */
 
 /**
@@ -35,12 +54,14 @@ document.documentElement.dataset.webAb169 = "1";
 /** @type {CustomWindow} */
 const WINDOW = window["ab169"] || {};
 
-WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || 8;
+/** @type {Ab169Object['numberOfCPPTiles']} */
+const numberOfCPPTiles = 8
 
-WINDOW.tileMapping = WINDOW.tileMapping || {
+/** @type {Ab169Object['tileMapping']} */
+const mapping = {
   0: 0,
-  1: "n1",
-  2: null,
+  1: 1,
+  2: 2,
   3: 3,
   4: 10,
   5: 11,
@@ -48,20 +69,35 @@ WINDOW.tileMapping = WINDOW.tileMapping || {
   7: 13,
 };
 
-/**
- * @typedef {object} ChangeContent
- * @param {string} targetElement
- * @param {string} html
- * @return void
- */
+WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || numberOfCPPTiles;
+
+WINDOW.tileMapping = WINDOW.tileMapping || 
+/** @type {Ab169Object['tileMapping']} */
+({
+  0: '1',
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 10,
+  5: 11,
+  6: 12,
+  7: 13,
+})
+
+// WINDOW.tileMapping = WINDOW.tileMapping || mapping;
+
+
 WINDOW.changeContent =
   WINDOW.changeContent ||
-  ((targetElement, html) => {
-    const documentFragment = document
-      .createRange()
-      .createContextualFragment(html);
-    targetElement.replaceWith(documentFragment);
-  });
+  /** @type {ChangeContent} */
+  (
+    (targetElement, html) => {
+      const documentFragment = document
+        .createRange()
+        .createContextualFragment(html);
+      targetElement.replaceWith(documentFragment);
+    }
+  );
 
 WINDOW.addPromotedTagToTiles =
   WINDOW.addPromotedTagToTiles ||
