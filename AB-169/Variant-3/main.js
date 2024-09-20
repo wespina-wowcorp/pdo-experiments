@@ -1,4 +1,3 @@
-
 // ==UserScript==
 // @name         AB-169: Variant 3
 // @namespace    https://woolworths-agile.atlassian.net/browse/AB-169
@@ -10,7 +9,7 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(' >>>>>> AB-169 Variant 3 Running >>>>>>'); 
+console.log(" >>>>>> AB-169 Variant 3 Running >>>>>>");
 
 /* COPY FROM BELOW TO OPTIMIZELY */
 
@@ -24,6 +23,7 @@ document.documentElement.dataset.webAb169 = "3";
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
  * @property {AddPromotedTagToTiles} addPromotedTagToTiles
  * @property {ExchangeElements} exchangeElements
+ * @property {HasShuffled} hasShuffled
  * @property {Dynamic} dynamic
  */
 
@@ -52,7 +52,7 @@ const tileMapping = {
   5: 5,
   6: 6,
   7: 7,
-  8: 8
+  8: 8,
 };
 
 /**
@@ -126,6 +126,12 @@ const exchangeElements = (element1, element2) => {
 };
 
 /**
+ * @typedef {boolean} HasShuffled
+ * @type {HasShuffled}
+ */
+let hasShuffled = false;
+
+/**
  * @typedef {() => void} Dynamic
  * @type {Dynamic}
  */
@@ -148,8 +154,9 @@ const dynamic = () => {
 
     observer.disconnect();
 
-    if (!specialsProductGrid) return;
+    if (!specialsProductGrid || hasShuffled) return;
     const childNodes = specialsProductGrid.children; // does not include comment elements
+
     const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
     const mapping = WINDOW.tileMapping;
 
@@ -159,6 +166,8 @@ const dynamic = () => {
     for (const tile in mapping) {
       WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
     }
+
+    hasShuffled = true;
 
     observer.observe(document.body, {
       childList: true,
@@ -179,6 +188,7 @@ WINDOW.addPromotedTagToTiles =
   WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
 WINDOW.exchangeElements = WINDOW.exchangeElements || exchangeElements;
 WINDOW.dynamic = WINDOW.dynamic || dynamic;
+WINDOW.hasShuffled = WINDOW.hasShuffled || hasShuffled;
 
 try {
   if (document.body == null) {
