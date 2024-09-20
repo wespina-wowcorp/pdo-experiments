@@ -23,7 +23,6 @@ document.documentElement.dataset.webAb169 = "2";
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
  * @property {AddPromotedTagToTiles} addPromotedTagToTiles
  * @property {ExchangeElements} exchangeElements
- * @property {HasShuffled} hasShuffled
  * @property {Dynamic} dynamic
  */
 
@@ -122,12 +121,6 @@ const exchangeElements = (element1, element2) => {
 };
 
 /**
- * @typedef {boolean} HasShuffled
- * @type {HasShuffled}
- */
-let hasShuffled = false;
-
-/**
  * @typedef {() => void} Dynamic
  * @type {Dynamic}
  */
@@ -137,6 +130,9 @@ const dynamic = () => {
       return observer.disconnect();
     }
 
+    const params = new URLSearchParams(document.location.search);
+    const pageParam = params.get("page");
+
     const specialsProductGrid = document.querySelector(
       "wnz-search .contentContainer-main product-grid"
     );
@@ -144,26 +140,37 @@ const dynamic = () => {
       (mutation) => mutation.target === specialsProductGrid
     );
 
-    if (!includesSpecialsGrid) {
+    if (!includesSpecialsGrid || !specialsProductGrid) {
       return;
     }
 
     observer.disconnect();
 
-    if (!specialsProductGrid || hasShuffled) return;
-    const childNodes = specialsProductGrid.children; // does not include comment elements
+    const promotedTag = specialsProductGrid.querySelector(
+      ":scope product-stamp-grid .ab169-promoted"
+    );
 
-    const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
-    const mapping = WINDOW.tileMapping;
-
-    WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
-    WINDOW.addPromotedTagToTiles(CPPTiles);
-
-    for (const tile in mapping) {
-      WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
+    // TODO - Verify more business rules
+    // - Which filters will show the CPP tiles in the feed?
+    if (!!promotedTag && (!pageParam || pageParam === "1")) {
+      return observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
     }
 
-    hasShuffled = true;
+    const childNodes = specialsProductGrid.children; // does not include comment elements
+    const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
+
+    WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
+
+    if (!pageParam || pageParam === "1") {
+      const mapping = WINDOW.tileMapping;
+      for (const tile in mapping) {
+        WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
+      }
+      WINDOW.addPromotedTagToTiles(CPPTiles);
+    }
 
     observer.observe(document.body, {
       childList: true,
@@ -184,7 +191,6 @@ WINDOW.addPromotedTagToTiles =
   WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
 WINDOW.exchangeElements = WINDOW.exchangeElements || exchangeElements;
 WINDOW.dynamic = WINDOW.dynamic || dynamic;
-WINDOW.hasShuffled = WINDOW.hasShuffled || hasShuffled;
 
 try {
   if (document.body == null) {

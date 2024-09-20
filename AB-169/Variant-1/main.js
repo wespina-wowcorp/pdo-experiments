@@ -7,7 +7,7 @@
 // @description  CPP Reconfiguration V4
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials*
-// @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-1/main.js
+// @require      file:///Users/wilsonespina/Development/woolworths/pdo-experiments/AB-169/Variant-1/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
@@ -20,19 +20,18 @@ console.log(" >>>>>> AB-169 Variant 1 Running >>>>>>");
 document.documentElement.dataset.webAb169 = "1";
 
 /**
- * @typedef {object} Ab169Object
+ * @typedef {object} Ab169Var1Object
  * @property {NumberOfCPPTiles} numberOfCPPTiles
  * @property {TileMapping} tileMapping
  * @property {ChangeContent} changeContent
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
  * @property {AddPromotedTagToTiles} addPromotedTagToTiles
  * @property {ExchangeElements} exchangeElements
- * @property {HasShuffled} hasShuffled
  * @property {Dynamic} dynamic
  */
 
 /**
- * @typedef {Window & Ab169Object} CustomWindow
+ * @typedef {Window & Ab169Var1Object} CustomWindow
  * @type {CustomWindow}
  */
 const WINDOW = window["ab169"] || {};
@@ -129,31 +128,10 @@ const exchangeElements = (element1, element2) => {
 };
 
 /**
- * @typedef {boolean} HasShuffled
- * @type {HasShuffled}
- */
-let hasShuffled = false;
-
-/**
- * @type {TileMapping}
- */
-let currentMapping = {
-  0: 0,
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 7,
-};
-
-/**
  * @typedef {() => void} Dynamic
  * @type {Dynamic}
  */
 const dynamic = () => {
-  let previousUrl = '';
   new MutationObserver((mutationList, observer) => {
     if (!location.pathname.startsWith("/shop/specials")) {
       return observer.disconnect();
@@ -161,7 +139,6 @@ const dynamic = () => {
 
     const params = new URLSearchParams(document.location.search);
     const pageParam = params.get("page");
-    const sizeParam = params.get("size");
 
     const specialsProductGrid = document.querySelector(
       "wnz-search .contentContainer-main product-grid"
@@ -176,34 +153,30 @@ const dynamic = () => {
 
     observer.disconnect();
 
-    // if (location.href !== previousUrl) {
-    //   previousUrl = location.href;
-    //   console.log(`URL changed to ${location.href}`);
-    // }
+    const promotedTag = specialsProductGrid.querySelector(
+      ":scope product-stamp-grid .ab169-promoted"
+    );
 
-    const childNodes = specialsProductGrid.children; // does not include comment elements
-    const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
-
-    if (hasShuffled) {
+    // TODO - Verify more business rules
+    // - Which filters will show the CPP tiles in the feed?
+    if (!!promotedTag && (!pageParam || pageParam === "1")) {
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
       });
     }
 
-    WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
+    const childNodes = specialsProductGrid.children; // does not include comment elements
+    const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
 
+    WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
 
     if (!pageParam || pageParam === "1") {
       const mapping = WINDOW.tileMapping;
-
       for (const tile in mapping) {
         WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
       }
-
       WINDOW.addPromotedTagToTiles(CPPTiles);
-
-      hasShuffled = true;
     }
 
     observer.observe(document.body, {
@@ -225,7 +198,6 @@ WINDOW.addPromotedTagToTiles =
   WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
 WINDOW.exchangeElements = WINDOW.exchangeElements || exchangeElements;
 WINDOW.dynamic = WINDOW.dynamic || dynamic;
-WINDOW.hasShuffled = WINDOW.hasShuffled || hasShuffled;
 
 try {
   if (document.body == null) {
@@ -241,5 +213,9 @@ try {
 GM_addStyle(`
   html:not(#ab169)[data-web-ab169="1"] cdx-card:has(product-stamp-grid .ab169-promoted) {
     background-color: pink;
+  }
+
+  html:not(#ab169)[data-web-ab169="1"] .dynamic-content-row {
+    display:none;
   }
 `);
