@@ -135,14 +135,33 @@ const exchangeElements = (element1, element2) => {
 let hasShuffled = false;
 
 /**
+ * @type {TileMapping}
+ */
+let currentMapping = {
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+};
+
+/**
  * @typedef {() => void} Dynamic
  * @type {Dynamic}
  */
 const dynamic = () => {
+  let previousUrl = '';
   new MutationObserver((mutationList, observer) => {
     if (!location.pathname.startsWith("/shop/specials")) {
       return observer.disconnect();
     }
+
+    const params = new URLSearchParams(document.location.search);
+    const pageParam = params.get("page");
+    const sizeParam = params.get("size");
 
     const specialsProductGrid = document.querySelector(
       "wnz-search .contentContainer-main product-grid"
@@ -151,26 +170,41 @@ const dynamic = () => {
       (mutation) => mutation.target === specialsProductGrid
     );
 
-    if (!includesSpecialsGrid) {
+    if (!includesSpecialsGrid || !specialsProductGrid) {
       return;
     }
 
     observer.disconnect();
 
-    if (!specialsProductGrid || hasShuffled) return;
+    // if (location.href !== previousUrl) {
+    //   previousUrl = location.href;
+    //   console.log(`URL changed to ${location.href}`);
+    // }
+
     const childNodes = specialsProductGrid.children; // does not include comment elements
-
     const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
-    const mapping = WINDOW.tileMapping;
 
-    WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
-    WINDOW.addPromotedTagToTiles(CPPTiles);
-
-    for (const tile in mapping) {
-      WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
+    if (hasShuffled) {
+      return observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
     }
 
-    hasShuffled = true;
+    WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
+
+
+    if (!pageParam || pageParam === "1") {
+      const mapping = WINDOW.tileMapping;
+
+      for (const tile in mapping) {
+        WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
+      }
+
+      WINDOW.addPromotedTagToTiles(CPPTiles);
+
+      hasShuffled = true;
+    }
 
     observer.observe(document.body, {
       childList: true,
