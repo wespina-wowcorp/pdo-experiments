@@ -10,34 +10,189 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(' >>>>>> AB-169 Running >>>>>>'); 
+console.log(' >>>>>> AB-169 Variant 3 Running >>>>>>'); 
 
 /* COPY FROM BELOW TO OPTIMIZELY */
 
 document.documentElement.dataset.webAb169 = "3";
 
-window.ab169 = window.ab169 || {};
+/**
+ * @typedef {object} Ab169Object
+ * @property {NumberOfCPPTiles} numberOfCPPTiles
+ * @property {TileMapping} tileMapping
+ * @property {ChangeContent} changeContent
+ * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
+ * @property {AddPromotedTagToTiles} addPromotedTagToTiles
+ * @property {ExchangeElements} exchangeElements
+ * @property {Dynamic} dynamic
+ */
 
-window.ab169.dynamic =
-  window.ab169.dynamic ||
-  (() => {
-    new MutationObserver((mutationList, observer) => {
+/**
+ * @typedef {Window & Ab169Object} CustomWindow
+ * @type {CustomWindow}
+ */
+const WINDOW = window["ab169"] || {};
 
-      /* INSERT CODE HERE */
+/**
+ * @typedef {number} NumberOfCPPTiles
+ * @type {NumberOfCPPTiles}
+ */
+const numberOfCPPTiles = 8;
 
-    }).observe(document.body, {
+/**
+ * @typedef {Record<number, number>} TileMapping
+ * @type {TileMapping}
+ */
+const tileMapping = {
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8
+};
+
+/**
+ * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
+ * @type {ChangeContent}
+ */
+const changeContent = (targetElement, html) => {
+  const documentFragment = document
+    .createRange()
+    .createContextualFragment(html);
+  targetElement.replaceWith(documentFragment);
+};
+
+/**
+ * @typedef {(tiles: HTMLCollection) => void} RemovePromotedTagFromTiles
+ * @type {RemovePromotedTagFromTiles}
+ */
+const removePromotedTagFromTiles = (grid) => {
+  Array.from(grid).forEach((tile) => {
+    const promotedTag = tile.querySelector(
+      ":scope product-stamp-grid .ab169-promoted"
+    );
+    if (promotedTag) {
+      promotedTag.remove();
+    }
+  });
+};
+
+/**
+ * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
+ * @type {AddPromotedTagToTiles}
+ */
+const addPromotedTagToTiles = (tiles) => {
+  tiles.forEach((tile) => {
+    const imageLink = tile.querySelector(
+      ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
+    );
+
+    if (imageLink) {
+      const div = document.createElement("div");
+      imageLink.appendChild(div);
+      WINDOW.changeContent(
+        div,
+        `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
+      );
+    }
+  });
+};
+
+/**
+ * Swaps two DOM elements while keeping their event listeners attached.
+ *
+ * @typedef {(element1: Element, element2: Element) => void} ExchangeElements
+ * @type {ExchangeElements}
+ */
+const exchangeElements = (element1, element2) => {
+  if (element1 === element2 || !element1 || !element2) return;
+
+  const parent1 = element1.parentNode;
+  const sibling1 =
+    element1.nextSibling === element2 ? element1 : element1.nextSibling;
+
+  const parent2 = element2.parentNode;
+  const sibling2 =
+    element2.nextSibling === element1 ? element2 : element2.nextSibling;
+
+  if (parent1 && parent2) {
+    parent1.insertBefore(element2, sibling1);
+    parent2.insertBefore(element1, sibling2);
+  }
+};
+
+/**
+ * @typedef {() => void} Dynamic
+ * @type {Dynamic}
+ */
+const dynamic = () => {
+  new MutationObserver((mutationList, observer) => {
+    if (!location.pathname.startsWith("/shop/specials")) {
+      return observer.disconnect();
+    }
+
+    const specialsProductGrid = document.querySelector(
+      "wnz-search .contentContainer-main product-grid"
+    );
+    const includesSpecialsGrid = mutationList.some(
+      (mutation) => mutation.target === specialsProductGrid
+    );
+
+    if (!includesSpecialsGrid) {
+      return;
+    }
+
+    observer.disconnect();
+
+    if (!specialsProductGrid) return;
+    const childNodes = specialsProductGrid.children; // does not include comment elements
+    const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
+    const mapping = WINDOW.tileMapping;
+
+    WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
+    WINDOW.addPromotedTagToTiles(CPPTiles);
+
+    for (const tile in mapping) {
+      WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
+    }
+
+    observer.observe(document.body, {
       childList: true,
       subtree: true,
     });
+  }).observe(document.body, {
+    childList: true,
+    subtree: true,
   });
+};
+
+WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || numberOfCPPTiles;
+WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
+WINDOW.changeContent = WINDOW.changeContent || changeContent;
+WINDOW.removePromotedTagFromTiles =
+  WINDOW.removePromotedTagFromTiles || removePromotedTagFromTiles;
+WINDOW.addPromotedTagToTiles =
+  WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
+WINDOW.exchangeElements = WINDOW.exchangeElements || exchangeElements;
+WINDOW.dynamic = WINDOW.dynamic || dynamic;
 
 try {
   if (document.body == null) {
-    document.addEventListener("DOMContentLoaded", window.ab169.dynamic);
+    document.addEventListener("DOMContentLoaded", WINDOW.dynamic);
   } else {
-    window.ab169.dynamic();
+    WINDOW.dynamic();
   }
 } catch (error) {
   console.error("ab169:", error);
 }
-  
+
+// @ts-ignore
+GM_addStyle(`
+  html:not(#ab169)[data-web-ab169="3"] cdx-card:has(product-stamp-grid .ab169-promoted) {
+    background-color: pink;
+  }
+`);

@@ -7,11 +7,13 @@
 // @description  CPP Reconfiguration V4
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials*
-// @require      file:///Users/wilsonespina/Development/woolworths/pdo-experiments/AB-169/Variant-1/main.js
+// @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-1/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
 console.log(" >>>>>> AB-169 Variant 1 Running >>>>>>");
+
+// TODO - check tracking still works after swap
 
 /* COPY FROM BELOW TO OPTIMIZELY */
 
@@ -19,30 +21,31 @@ document.documentElement.dataset.webAb169 = "1";
 
 /**
  * @typedef {object} Ab169Object
- * @property {number} numberOfCPPTiles
+ * @property {NumberOfCPPTiles} numberOfCPPTiles
  * @property {TileMapping} tileMapping
  * @property {ChangeContent} changeContent
+ * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
  * @property {AddPromotedTagToTiles} addPromotedTagToTiles
  * @property {ExchangeElements} exchangeElements
  * @property {Dynamic} dynamic
  */
 
 /**
- * @typedef {Record<number, number>} TileMapping
- * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
- * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
- * @typedef {(element1: Element, element2: Element) => Node | void} ExchangeElements
- * @typedef {() => void} Dynamic
  * @typedef {Window & Ab169Object} CustomWindow
+ * @type {CustomWindow}
  */
-
-/** @type {CustomWindow} */
 const WINDOW = window["ab169"] || {};
 
-/** @type {Ab169Object['numberOfCPPTiles']} */
+/**
+ * @typedef {number} NumberOfCPPTiles
+ * @type {NumberOfCPPTiles}
+ */
 const numberOfCPPTiles = 8;
 
-/** @type {TileMapping} */
+/**
+ * @typedef {Record<number, number>} TileMapping
+ * @type {TileMapping}
+ */
 const tileMapping = {
   0: 0,
   1: 1,
@@ -54,15 +57,36 @@ const tileMapping = {
   7: 13,
 };
 
-/** @type {ChangeContent} */
+/**
+ * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
+ * @type {ChangeContent}
+ */
 const changeContent = (targetElement, html) => {
   const documentFragment = document
-  .createRange()
-  .createContextualFragment(html);
+    .createRange()
+    .createContextualFragment(html);
   targetElement.replaceWith(documentFragment);
 };
 
-/** @type {AddPromotedTagToTiles} */
+/**
+ * @typedef {(tiles: HTMLCollection) => void} RemovePromotedTagFromTiles
+ * @type {RemovePromotedTagFromTiles}
+ */
+const removePromotedTagFromTiles = (grid) => {
+  Array.from(grid).forEach((tile) => {
+    const promotedTag = tile.querySelector(
+      ":scope product-stamp-grid .ab169-promoted"
+    );
+    if (promotedTag) {
+      promotedTag.remove();
+    }
+  });
+};
+
+/**
+ * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
+ * @type {AddPromotedTagToTiles}
+ */
 const addPromotedTagToTiles = (tiles) => {
   tiles.forEach((tile) => {
     const imageLink = tile.querySelector(
@@ -80,24 +104,33 @@ const addPromotedTagToTiles = (tiles) => {
   });
 };
 
-/** @type {ExchangeElements} */
+/**
+ * Swaps two DOM elements while keeping their event listeners attached.
+ *
+ * @typedef {(element1: Element, element2: Element) => void} ExchangeElements
+ * @type {ExchangeElements}
+ */
 const exchangeElements = (element1, element2) => {
   if (element1 === element2 || !element1 || !element2) return;
 
-  const clonedElement1 = element1.cloneNode(true);
-  const clonedElement2 = element2.cloneNode(true);
+  const parent1 = element1.parentNode;
+  const sibling1 =
+    element1.nextSibling === element2 ? element1 : element1.nextSibling;
 
-  if (element2.parentNode) {
-    element2.parentNode.replaceChild(clonedElement1, element2);
+  const parent2 = element2.parentNode;
+  const sibling2 =
+    element2.nextSibling === element1 ? element2 : element2.nextSibling;
+
+  if (parent1 && parent2) {
+    parent1.insertBefore(element2, sibling1);
+    parent2.insertBefore(element1, sibling2);
   }
-  if (element1.parentNode) {
-    element1.parentNode.replaceChild(clonedElement2, element1);
-  }
+};
 
-  return clonedElement1;
-}
-
-/** @type {Dynamic} */
+/**
+ * @typedef {() => void} Dynamic
+ * @type {Dynamic}
+ */
 const dynamic = () => {
   new MutationObserver((mutationList, observer) => {
     if (!location.pathname.startsWith("/shop/specials")) {
@@ -117,23 +150,41 @@ const dynamic = () => {
 
     observer.disconnect();
 
+    console.log(">>> RUNNIUNG AGAIN>?>?>>");
+
     if (!specialsProductGrid) return;
     const childNodes = specialsProductGrid.children; // does not include comment elements
-    const CPPTiles = Array.from(childNodes).slice(
-      0,
-      WINDOW.numberOfCPPTiles
-    );
+    console.log("🚀 ~ newMutationObserver ~ childNodes=====-:", childNodes)
+
+    // // restore order before adding promoted tags
+    // const originalMapping = {
+    //   0: 0,
+    //   1: 1,
+    //   2: 2,
+    //   3: 3,
+    //   10: 4,
+    //   11: 5,
+    //   12: 6,
+    //   13: 7,
+    // };
+
+    // for (const tile in originalMapping) {
+    //   WINDOW.exchangeElements(
+    //     childNodes[tile],
+    //     childNodes[originalMapping[tile]]
+    //   );
+    // }
+
+    const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
+    console.log("🚀 ~ newMutationObserver ~ CPPTiles=====:", CPPTiles)
     const mapping = WINDOW.tileMapping;
 
+    WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
     WINDOW.addPromotedTagToTiles(CPPTiles);
 
     for (const tile in mapping) {
       WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
     }
-
-    // TODO - check tracking still works after swap
-
-    /* INSERT CODE HERE */
 
     observer.observe(document.body, {
       childList: true,
@@ -143,12 +194,15 @@ const dynamic = () => {
     childList: true,
     subtree: true,
   });
-}
+};
 
 WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || numberOfCPPTiles;
 WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
 WINDOW.changeContent = WINDOW.changeContent || changeContent;
-WINDOW.addPromotedTagToTiles = WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
+WINDOW.removePromotedTagFromTiles =
+  WINDOW.removePromotedTagFromTiles || removePromotedTagFromTiles;
+WINDOW.addPromotedTagToTiles =
+  WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
 WINDOW.exchangeElements = WINDOW.exchangeElements || exchangeElements;
 WINDOW.dynamic = WINDOW.dynamic || dynamic;
 
@@ -162,13 +216,9 @@ try {
   console.error("ab169:", error);
 }
 
-
-
-
-
 // @ts-ignore
 GM_addStyle(`
-  html:not(#ab135)[data-web-ab169="1"] cdx-card:has(product-stamp-grid ['ab169']-promoted) {
+  html:not(#ab169)[data-web-ab169="1"] cdx-card:has(product-stamp-grid .ab169-promoted) {
     background-color: pink;
   }
 `);
