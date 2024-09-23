@@ -89,10 +89,30 @@ const addPromotedTagToTiles = (tiles) => {
     // TODO- remove this for post-prototype build
     // ************************
     if (tile) {
-      if (tile instanceof HTMLElement) {
-        tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${index + 16})`;
-        tile.style.backgroundRepeat = 'no-repeat';
-      }
+      const mediaQueryCondition = window.matchMedia("(min-width: 640px)");
+
+      const addBackground = (matches) => {
+        if (tile instanceof HTMLElement) {
+          if (matches) {
+            if (mediaQueryCondition.matches) {
+              tile.style.backgroundRepeat = "no-repeat";
+              tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${
+                index + 16
+              })`;
+            }
+          } else {
+            tile.style.backgroundRepeat = "no-repeat";
+            tile.style.backgroundImage = `url(https://placehold.co/402x223/pink/grey?text=${
+              index + 16
+          })`;
+          }
+        };
+      };
+      // tile.classList.add("ab-169-small-image");
+      mediaQueryCondition.addEventListener("change", ({ matches }) =>
+        addBackground(matches)
+      );
+      addBackground(mediaQueryCondition.matches);
     }
     // ************************
 
