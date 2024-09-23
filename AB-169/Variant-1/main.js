@@ -21,7 +21,6 @@ document.documentElement.dataset.webAb169 = "1";
 
 /**
  * @typedef {object} Ab169Var1Object
- * @property {NumberOfCPPTiles} numberOfCPPTiles
  * @property {TileMapping} tileMapping
  * @property {ChangeContent} changeContent
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
@@ -37,24 +36,18 @@ document.documentElement.dataset.webAb169 = "1";
 const WINDOW = window["ab169"] || {};
 
 /**
- * @typedef {number} NumberOfCPPTiles
- * @type {NumberOfCPPTiles}
- */
-const numberOfCPPTiles = 8;
-
-/**
  * @typedef {Record<number, number>} TileMapping
  * @type {TileMapping}
  */
 const tileMapping = {
-  0: 0,
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 10,
-  5: 11,
-  6: 12,
-  7: 13,
+  16: 0,
+  17: 1,
+  18: 2,
+  19: 3,
+  20: 10,
+  21: 11,
+  22: 12,
+  23: 13,
 };
 
 /**
@@ -88,10 +81,20 @@ const removePromotedTagFromTiles = (grid) => {
  * @type {AddPromotedTagToTiles}
  */
 const addPromotedTagToTiles = (tiles) => {
-  tiles.forEach((tile) => {
+  tiles.forEach((tile, index) => {
     const imageLink = tile.querySelector(
       ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
     );
+
+    // TODO- remove this for post-prototype build
+    // ************************
+    if (tile) {
+      if (tile instanceof HTMLElement) {
+        tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${index + 16})`;
+        tile.style.backgroundRepeat = 'no-repeat';
+      }
+    }
+    // ************************
 
     if (imageLink) {
       const div = document.createElement("div");
@@ -167,7 +170,9 @@ const dynamic = () => {
     }
 
     const childNodes = specialsProductGrid.children; // does not include comment elements
-    const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
+
+    // Assumes CPP tiles are in positions 16 - 24 in the API response
+    const CPPTiles = Array.from(childNodes).slice(16, 25);
 
     WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
 
@@ -189,7 +194,6 @@ const dynamic = () => {
   });
 };
 
-WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || numberOfCPPTiles;
 WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
 WINDOW.changeContent = WINDOW.changeContent || changeContent;
 WINDOW.removePromotedTagFromTiles =

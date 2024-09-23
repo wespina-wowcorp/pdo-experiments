@@ -17,7 +17,6 @@ document.documentElement.dataset.webAb169 = "2";
 
 /**
  * @typedef {object} Ab169Object
- * @property {NumberOfCPPTiles} numberOfCPPTiles
  * @property {TileMapping} tileMapping
  * @property {ChangeContent} changeContent
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
@@ -32,22 +31,17 @@ document.documentElement.dataset.webAb169 = "2";
  */
 const WINDOW = window["ab169"] || {};
 
-/**
- * @typedef {number} NumberOfCPPTiles
- * @type {NumberOfCPPTiles}
- */
-const numberOfCPPTiles = 5;
 
 /**
  * @typedef {Record<number, number>} TileMapping
  * @type {TileMapping}
  */
 const tileMapping = {
-  0: 0,
-  1: 5,
-  2: 10,
-  3: 15,
-  4: 20,
+  16: 0,
+  17: 5,
+  18: 10,
+  19: 15,
+  20: 20,
 };
 
 /**
@@ -81,10 +75,20 @@ const removePromotedTagFromTiles = (grid) => {
  * @type {AddPromotedTagToTiles}
  */
 const addPromotedTagToTiles = (tiles) => {
-  tiles.forEach((tile) => {
+  tiles.forEach((tile, index) => {
     const imageLink = tile.querySelector(
       ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
     );
+
+    // TODO- remove this for post-prototype build
+    // ************************
+    if (tile) {
+      if (tile instanceof HTMLElement) {
+        tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${index + 16})`;
+        tile.style.backgroundRepeat = 'no-repeat';
+      }
+    }
+    // ************************
 
     if (imageLink) {
       const div = document.createElement("div");
@@ -159,8 +163,10 @@ const dynamic = () => {
       });
     }
 
-    const childNodes = specialsProductGrid.children; // does not include comment elements
-    const CPPTiles = Array.from(childNodes).slice(0, WINDOW.numberOfCPPTiles);
+    const childNodes = specialsProductGrid.children; // does not include comment 
+
+    // Assumes CPP tiles are in positions 16 - 24 in the API response
+    const CPPTiles = Array.from(childNodes).slice(16, 21);
 
     WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
 
@@ -182,7 +188,6 @@ const dynamic = () => {
   });
 };
 
-WINDOW.numberOfCPPTiles = WINDOW.numberOfCPPTiles || numberOfCPPTiles;
 WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
 WINDOW.changeContent = WINDOW.changeContent || changeContent;
 WINDOW.removePromotedTagFromTiles =
