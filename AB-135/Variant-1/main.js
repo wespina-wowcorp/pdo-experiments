@@ -45,20 +45,21 @@ window.ab135.dynamic =
   window.ab135.dynamic ||
   (() => {
     new MutationObserver((mutationList, observer) => {
-      if (!location.pathname.startsWith("/boosts")) {
-        return observer.disconnect();
-      }
+      // EDR site seems to cache content and does not run mutation observer after return statement, navigating away and returning to the same page
+			observer.disconnect();
 
       const topBanner = document.querySelector(
         'edr-section[data-contentful-entry-id="1MEYNrqvRdEDCfQ52E0xQa"]'
       );
+      
       const experimentImage = document.querySelector(".ab135");
 
       if (!topBanner || experimentImage) {
-        return;
+        return observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
       }
-
-      observer.disconnect();
 
       const heading = document.querySelector(
         ".banner__body-info-content edr-heading h1"
