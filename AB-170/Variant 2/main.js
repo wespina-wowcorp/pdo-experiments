@@ -2,7 +2,7 @@
 // @name         AB-170: Variant 1
 // @namespace    https://woolworths-agile.atlassian.net/browse/AB-170
 // @version      AB-170_variant_1
-// @description  Father's Day Tile Engagement
+// @description  Halloween Tile Engagement
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials*
 // @require      file://C:\Users\1442718\Development\overrides\AB-170\Variant 1\main.js
@@ -24,8 +24,8 @@ window.ab170 = window.ab170 || {};
 
 window.ab170.tileDetails =
   window.ab170.tileDetails || {
-    imageSrc: "https://www.woolworths.co.nz/content/f25wk9-fathersday-yellow-big.jpg",
-    tileLink: "https://www.woolworths.co.nz/shop/browse/father-s-day?filters=Specials;Specials;Specials;true;Specials&page=1&inStockProductsOnly=false&variation=2"
+    imageSrc: "https://placehold.co/537x322/yellow/white?text=Halloween+Tile+Variation+2", // TODO - Change placeholder
+    tileLink: "https://www.woolworths.co.nz/shop/content/halloween?ab170-var=2"
   };
 
 window.ab170.dynamic =
