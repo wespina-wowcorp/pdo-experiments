@@ -19,7 +19,8 @@ window.ab135.dynamic =
   (() => {
     new MutationObserver((mutationList, observer) => {
 
-
+      // if homepage - add banner
+      // if my favourites page - add tile
         
     })
   });

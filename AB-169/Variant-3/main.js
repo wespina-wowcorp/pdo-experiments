@@ -36,15 +36,15 @@ const WINDOW = window["ab169"] || {};
  * @type {TileMapping}
  */
 const tileMapping = {
-  16: 0,
-  17: 1,
-  18: 2,
-  19: 3,
-  20: 4,
-  21: 5,
-  22: 6,
-  23: 7,
-  24: 8,
+  15: 0,
+  16: 1,
+  17: 2,
+  18: 3,
+  19: 4,
+  20: 5,
+  21: 6,
+  22: 7,
+  23: 8,
 };
 
 /**
@@ -169,7 +169,7 @@ const dynamic = () => {
     const childNodes = specialsProductGrid.children; // does not include comment elements
 
         // Assumes CPP tiles are in positions 16 - 24 in the API response
-    const CPPTiles = Array.from(childNodes).slice(16, 25);
+    const CPPTiles = Array.from(childNodes).slice(15, 23);
 
     WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
 
