@@ -24,7 +24,7 @@ window.ab170 = window.ab170 || {};
 
 window.ab170.tileDetails =
   window.ab170.tileDetails || {
-    imageSrc: "https://placehold.co/537x322/yellow/white?text=Halloween+Tile+Variation+2", // TODO - Change placeholder
+    imageSrc: "https://placehold.co/537x322/yellow/grey?text=Halloween+Tile+Variation+2", // TODO - Change placeholder
     tileLink: "https://www.woolworths.co.nz/shop/content/halloween?ab170-var=2"
   };
 
