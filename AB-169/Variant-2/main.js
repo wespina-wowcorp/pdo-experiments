@@ -5,7 +5,7 @@
 // @description  CPP Reconfiguration V4
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials
-// @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-2/main.js
+// @require      file:///Users/wilsonespina/Development/woolworths/pdo-experiments/AB-169/Variant-2/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
@@ -21,7 +21,7 @@ document.documentElement.dataset.webAb169 = "2";
  * @property {ChangeContent} changeContent
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
  * @property {AddPromotedTagToTiles} addPromotedTagToTiles
- * @property {ExchangeElements} exchangeElements
+ * @property {PlaceElementInIndex} placeElementInIndex
  * @property {Dynamic} dynamic
  */
 
@@ -30,7 +30,6 @@ document.documentElement.dataset.webAb169 = "2";
  * @type {CustomWindow}
  */
 const WINDOW = window["ab169"] || {};
-
 
 /**
  * @typedef {Record<number, number>} TileMapping
@@ -41,7 +40,7 @@ const tileMapping = {
   16: 5,
   17: 10,
   18: 15,
-  19: 20,
+  19: 21, // TODO - check why this works
 };
 
 /**
@@ -84,8 +83,10 @@ const addPromotedTagToTiles = (tiles) => {
     // ************************
     if (tile) {
       if (tile instanceof HTMLElement) {
-        tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${index + 16})`;
-        tile.style.backgroundRepeat = 'no-repeat';
+        tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${
+          index + 16
+        })`;
+        tile.style.backgroundRepeat = "no-repeat";
       }
     }
     // ************************
@@ -102,25 +103,16 @@ const addPromotedTagToTiles = (tiles) => {
 };
 
 /**
- * Swaps two DOM elements while keeping their event listeners attached.
+ * Places DOM element at index while keeping their event listeners attached.
  *
- * @typedef {(element1: Element, element2: Element) => void} ExchangeElements
- * @type {ExchangeElements}
+ * @typedef {(element: Element, array: HTMLCollection, index: number) => void} PlaceElementInIndex
+ * @type {PlaceElementInIndex}
  */
-const exchangeElements = (element1, element2) => {
-  if (element1 === element2 || !element1 || !element2) return;
-
-  const parent1 = element1.parentNode;
-  const sibling1 =
-    element1.nextSibling === element2 ? element1 : element1.nextSibling;
-
-  const parent2 = element2.parentNode;
-  const sibling2 =
-    element2.nextSibling === element1 ? element2 : element2.nextSibling;
-
-  if (parent1 && parent2) {
-    parent1.insertBefore(element2, sibling1);
-    parent2.insertBefore(element1, sibling2);
+const placeElementInIndex = (element, array, index) => {
+  const gridItem = array[index];
+  if (!element) return;
+  if (gridItem !== null && gridItem.parentNode) {
+    gridItem.parentNode.insertBefore(element, gridItem);
   }
 };
 
@@ -163,17 +155,17 @@ const dynamic = () => {
       });
     }
 
-    const childNodes = specialsProductGrid.children; // does not include comment 
+    const childNodes = specialsProductGrid.children; // does not include comment
 
     // Assumes CPP tiles are in positions 16 - 24 in the API response
-    const CPPTiles = Array.from(childNodes).slice(15, 23);
+    const CPPTiles = Array.from(childNodes).slice(15, 20);
 
     WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
 
     if (!pageParam || pageParam === "1") {
       const mapping = WINDOW.tileMapping;
       for (const tile in mapping) {
-        WINDOW.exchangeElements(childNodes[tile], childNodes[mapping[tile]]);
+        WINDOW.placeElementInIndex(childNodes[tile], childNodes, mapping[tile]);
       }
       WINDOW.addPromotedTagToTiles(CPPTiles);
     }
@@ -194,7 +186,7 @@ WINDOW.removePromotedTagFromTiles =
   WINDOW.removePromotedTagFromTiles || removePromotedTagFromTiles;
 WINDOW.addPromotedTagToTiles =
   WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
-WINDOW.exchangeElements = WINDOW.exchangeElements || exchangeElements;
+WINDOW.placeElementInIndex = WINDOW.placeElementInIndex || placeElementInIndex;
 WINDOW.dynamic = WINDOW.dynamic || dynamic;
 
 try {
