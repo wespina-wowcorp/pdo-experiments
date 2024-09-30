@@ -17,11 +17,10 @@ document.documentElement.dataset.webAb169 = "2";
 
 /**
  * @typedef {object} Ab169Object
- * @property {TileMapping} tileMapping
  * @property {ChangeContent} changeContent
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
  * @property {AddPromotedTagToTiles} addPromotedTagToTiles
- * @property {PlaceElementInIndex} placeElementInIndex
+ * @property {PlaceElementAtIndex} placeElementAtIndex
  * @property {Dynamic} dynamic
  */
 
@@ -30,18 +29,6 @@ document.documentElement.dataset.webAb169 = "2";
  * @type {CustomWindow}
  */
 const WINDOW = window["ab169"] || {};
-
-/**
- * @typedef {Record<number, number>} TileMapping
- * @type {TileMapping}
- */
-const tileMapping = {
-  15: 0,
-  16: 5,
-  17: 10,
-  18: 15,
-  19: 21, // TODO - check why this works
-};
 
 /**
  * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
@@ -69,6 +56,8 @@ const removePromotedTagFromTiles = (grid) => {
   });
 };
 
+// TODO- remove this for post-prototype build
+// ************************
 /**
  * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
  * @type {AddPromotedTagToTiles}
@@ -79,17 +68,14 @@ const addPromotedTagToTiles = (tiles) => {
       ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
     );
 
-    // TODO- remove this for post-prototype build
-    // ************************
     if (tile) {
       if (tile instanceof HTMLElement) {
         tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${
-          index + 16
+          index + 1
         })`;
         tile.style.backgroundRepeat = "no-repeat";
       }
     }
-    // ************************
 
     if (imageLink) {
       const div = document.createElement("div");
@@ -101,14 +87,15 @@ const addPromotedTagToTiles = (tiles) => {
     }
   });
 };
+// ************************
 
 /**
  * Places DOM element at index while keeping their event listeners attached.
  *
- * @typedef {(element: Element, array: HTMLCollection, index: number) => void} PlaceElementInIndex
- * @type {PlaceElementInIndex}
+ * @typedef {(element: Element, array: HTMLCollection, index: number) => void} PlaceElementAtIndex
+ * @type {PlaceElementAtIndex}
  */
-const placeElementInIndex = (element, array, index) => {
+const placeElementAtIndex = (element, array, index) => {
   const gridItem = array[index];
   if (!element) return;
   if (gridItem !== null && gridItem.parentNode) {
@@ -157,17 +144,20 @@ const dynamic = () => {
 
     const childNodes = specialsProductGrid.children; // does not include comment
 
-    // Assumes CPP tiles are in positions 16 - 24 in the API response
-    const CPPTiles = Array.from(childNodes).slice(15, 20);
+    // Assumes CPP tiles are in positions 0 - 8 in the API response
+    const CPPTiles = Array.from(childNodes).slice(0, 5);
 
     WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
 
     if (!pageParam || pageParam === "1") {
-      const mapping = WINDOW.tileMapping;
-      for (const tile in mapping) {
-        WINDOW.placeElementInIndex(childNodes[tile], childNodes, mapping[tile]);
-      }
+      // TODO - remove after pre-build
+      // ************************
       WINDOW.addPromotedTagToTiles(CPPTiles);
+      // ************************
+      WINDOW.placeElementAtIndex(childNodes[1], childNodes, 9);
+      WINDOW.placeElementAtIndex(childNodes[1], childNodes, 13);
+      WINDOW.placeElementAtIndex(childNodes[1], childNodes, 17);
+      WINDOW.placeElementAtIndex(childNodes[1], childNodes, 21);
     }
 
     observer.observe(document.body, {
@@ -180,13 +170,12 @@ const dynamic = () => {
   });
 };
 
-WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
 WINDOW.changeContent = WINDOW.changeContent || changeContent;
 WINDOW.removePromotedTagFromTiles =
   WINDOW.removePromotedTagFromTiles || removePromotedTagFromTiles;
 WINDOW.addPromotedTagToTiles =
   WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
-WINDOW.placeElementInIndex = WINDOW.placeElementInIndex || placeElementInIndex;
+WINDOW.placeElementAtIndex = WINDOW.placeElementAtIndex || placeElementAtIndex;
 WINDOW.dynamic = WINDOW.dynamic || dynamic;
 
 try {

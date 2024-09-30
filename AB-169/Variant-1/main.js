@@ -13,19 +13,14 @@
 
 console.log(" >>>>>> AB-169 Variant 1 Running >>>>>>");
 
-// TODO - check tracking still works after swap
-
-/* COPY FROM BELOW TO OPTIMIZELY */
-
 document.documentElement.dataset.webAb169 = "1";
 
 /**
  * @typedef {object} Ab169Var1Object
- * @property {TileMapping} tileMapping
  * @property {ChangeContent} changeContent
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
  * @property {AddPromotedTagToTiles} addPromotedTagToTiles
- * @property {PlaceElementInIndex} placeElementInIndex
+ * @property {PlaceElementAtIndex} placeElementAtIndex
  * @property {Dynamic} dynamic
  */
 
@@ -34,21 +29,6 @@ document.documentElement.dataset.webAb169 = "1";
  * @type {CustomWindow}
  */
 const WINDOW = window["ab169"] || {};
-
-/**
- * @typedef {Record<number, number>} TileMapping
- * @type {TileMapping}
- */
-const tileMapping = {
-  15: 0,
-  16: 1,
-  17: 2,
-  18: 3,
-  19: 10,
-  20: 11,
-  21: 12,
-  22: 13,
-};
 
 /**
  * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
@@ -75,7 +55,8 @@ const removePromotedTagFromTiles = (grid) => {
     }
   });
 };
-
+// TODO- remove this for post-prototype build
+// ************************
 /**
  * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
  * @type {AddPromotedTagToTiles}
@@ -86,8 +67,6 @@ const addPromotedTagToTiles = (tiles) => {
       ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
     );
 
-    // TODO- remove this for post-prototype build
-    // ************************
     if (tile) {
       const mediaQueryCondition = window.matchMedia("(min-width: 640px)");
 
@@ -97,13 +76,13 @@ const addPromotedTagToTiles = (tiles) => {
             if (mediaQueryCondition.matches) {
               tile.style.backgroundRepeat = "no-repeat";
               tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${
-                index + 16
+                index + 1
               })`;
             }
           } else {
             tile.style.backgroundRepeat = "no-repeat";
             tile.style.backgroundImage = `url(https://placehold.co/402x223/pink/grey?text=${
-              index + 16
+              index + 1
             })`;
           }
         }
@@ -114,7 +93,6 @@ const addPromotedTagToTiles = (tiles) => {
       );
       addBackground(mediaQueryCondition.matches);
     }
-    // ************************
 
     if (imageLink) {
       const div = document.createElement("div");
@@ -126,17 +104,19 @@ const addPromotedTagToTiles = (tiles) => {
     }
   });
 };
+// ************************
 
 /**
  * Places DOM element at index while keeping their event listeners attached.
  *
- * @typedef {(element: Element, array: HTMLCollection, index: number) => void} PlaceElementInIndex
- * @type {PlaceElementInIndex}
+ * @typedef {(element: Element, array: HTMLCollection, index: number) => void | Element} PlaceElementAtIndex
+ * @type {PlaceElementAtIndex}
  */
-const placeElementInIndex = (element, array, index) => {
+const placeElementAtIndex = (element, array, index) => {
   const gridItem = array[index];
-  if (!element) return;
-  if (gridItem !== null && gridItem.parentNode) {
+  const promotedTag = element.querySelector(":scope product-stamp-grid");
+  if (!element || !promotedTag) return;
+  if (gridItem && gridItem.parentNode) {
     gridItem.parentNode.insertBefore(element, gridItem);
   }
 };
@@ -171,8 +151,6 @@ const dynamic = () => {
       ":scope product-stamp-grid .ab169-promoted"
     );
 
-    // TODO - Verify more business rules
-    // - Which filters will show the CPP tiles in the feed?
     if (!!promotedTag && (!pageParam || pageParam === "1")) {
       return observer.observe(document.body, {
         childList: true,
@@ -182,17 +160,21 @@ const dynamic = () => {
 
     const childNodes = specialsProductGrid.children; // does not include comment elements
 
-    // Assumes CPP tiles are in positions 16 - 24 in the API response
-    const CPPTiles = Array.from(childNodes).slice(15, 23);
+    // Assumes CPP tiles are in positions 1 - 8 in the API response
+    const CPPTiles = Array.from(childNodes).slice(0, 8);
 
     WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
 
     if (!pageParam || pageParam === "1") {
-      const mapping = WINDOW.tileMapping;
-      for (const tile in mapping) {
-        WINDOW.placeElementInIndex(childNodes[tile], childNodes, mapping[tile]);
-      }
+      // TODO - remove after pre-build
+      // ************************
       WINDOW.addPromotedTagToTiles(CPPTiles);
+      // ************************
+
+      WINDOW.placeElementAtIndex(childNodes[4], childNodes, 14);
+      WINDOW.placeElementAtIndex(childNodes[4], childNodes, 14);
+      WINDOW.placeElementAtIndex(childNodes[4], childNodes, 14);
+      WINDOW.placeElementAtIndex(childNodes[4], childNodes, 14);
     }
 
     observer.observe(document.body, {
@@ -205,13 +187,12 @@ const dynamic = () => {
   });
 };
 
-WINDOW.tileMapping = WINDOW.tileMapping || tileMapping;
 WINDOW.changeContent = WINDOW.changeContent || changeContent;
 WINDOW.removePromotedTagFromTiles =
   WINDOW.removePromotedTagFromTiles || removePromotedTagFromTiles;
 WINDOW.addPromotedTagToTiles =
   WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
-WINDOW.placeElementInIndex = WINDOW.placeElementInIndex || placeElementInIndex;
+WINDOW.placeElementAtIndex = WINDOW.placeElementAtIndex || placeElementAtIndex;
 WINDOW.dynamic = WINDOW.dynamic || dynamic;
 
 try {
