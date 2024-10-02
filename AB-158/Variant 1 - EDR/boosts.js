@@ -24,12 +24,17 @@ window.ab158.dynamic =
         return observer.disconnect();
       }
 
+      observer.disconnect();
+
       const edrGridContainer = document.querySelector(
         "edr-dc-dynamic-content:has(> edr-section)"
       );
 
       if (!edrGridContainer) {
-        return;
+        return observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
       }
 
       const boostsSection = document.querySelector(
@@ -68,7 +73,7 @@ window.ab158.dynamic =
         // swap headings and cta
         if (moreBoostsHeadingEl && boostsHeadingEl) {
           moreBoostsHeadingEl.textContent = boostsHeadingEl.textContent;
-          boostsHeadingEl.style.display = "none";
+          boostsHeadingEl.style.display = "none"; // add a class instead
         }
         if (moreBoostsSubheadingEl && boostsSubheadingEl) {
           moreBoostsSubheadingEl.textContent = boostsSubheadingEl.textContent;
@@ -83,9 +88,9 @@ window.ab158.dynamic =
 
       if (edrGridContainer && boostsSection) {
         edrGridContainer.insertBefore(moreBoostsSection, boostsSection);
-
-        return observer.disconnect();
       }
+
+      observer.observe(document.body, { childList: true, subtree: true });
     }).observe(document.body, {
       childList: true,
       subtree: true,
