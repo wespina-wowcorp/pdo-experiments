@@ -24,12 +24,23 @@ window.ab158.dynamic =
         return observer.disconnect();
       }
 
+      observer.disconnect();
+
       const edrGridContainer = document.querySelector(
         "edr-dc-dynamic-content:has(> edr-section)"
       );
 
+      const experimentClass = document.querySelector(".ab158");
+
       if (!edrGridContainer) {
-        return;
+        return observer.disconnect();
+      }
+
+      if (experimentClass) {
+        return observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
       }
 
       const boostsSection = document.querySelector(
@@ -77,7 +88,6 @@ window.ab158.dynamic =
           boostsSubheadingEl.style.display = "none";
         }
         if (container && ctaContainer) {
-          container.append(ctaContainer);
           container.prepend(boostsHeadingCopy);
           ctaContainer.style.display = "none";
         }
@@ -85,8 +95,7 @@ window.ab158.dynamic =
 
       if (edrGridContainer && boostsSection) {
         edrGridContainer.insertBefore(moreBoostsSection, boostsSection);
-
-        return observer.disconnect();
+        edrGridContainer.classList.add("ab158");
       }
     }).observe(document.body, {
       childList: true,
