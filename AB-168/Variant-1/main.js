@@ -9,13 +9,9 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(' >>>>>> AB-168 Running >>>>>>');
+console.log(" >>>>>> AB-168 Running >>>>>>");
 
-
-document.documentElement.dataset.aaWeb = "1";
-console.info("Optimizely Web Experimentation -", "Starting A/A Test -", "Variation 1");
-console.info("Optimizely Web Experimentation -", "User Id:", window.optimizely.get("visitor").visitorId);
-console.info("Optimizely Web Experimentation -", "Revision:", window.optimizely.get("data").revision);
+document.documentElement.dataset.webAb168 = "1";
 
 function dynamic() {
   new MutationObserver((mutationList, observer) => {
@@ -29,27 +25,26 @@ function dynamic() {
     )[0];
     if (mutationRecord == null) return;
     observer.disconnect();
-    mutationRecord.target.querySelector("#search").addEventListener(
-      "click",
-      () => {
-        console.log("<<<<<AB-168>>>>>: A/A Test - Search Clicked");
-        return utag.link({
-          tealium_event: "ab_test",
-          test_name: "AB-168",
-          test_event: "aa_test",
-          test_component: "ab_search",
-          test_content: "Clicked"
-        })
-      },
-        // window.dataLayer.push({
-        //   event: "notification_event",
-        //   notification_type: "aa_test",
-        //   name: "Search Input",
-        //   value: "Clicked",
-        // }),
-        
-      { once: true }
-    );
+
+    mutationRecord.target
+      .querySelector(":scope .search-box-layout")
+      .addEventListener(
+        "click",
+        function () {
+          if (utag) {
+            return utag.link({
+              tealium_event: "ab_test",
+              test_name: "AB-168",
+              test_event: "aa_test",
+              test_component: "ab_search",
+              test_content: "Clicked",
+            });
+          }
+        },
+        { once: true }
+      );
+
+    observer.observe(document.body, { childList: true, subtree: true });
   }).observe(document.body, { childList: true, subtree: true });
 }
 
@@ -60,6 +55,5 @@ try {
     dynamic();
   }
 } catch (error) {
-  console.error("aa:", error);
+  console.error("ab168:", error);
 }
-

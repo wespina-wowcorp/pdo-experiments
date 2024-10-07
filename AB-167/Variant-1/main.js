@@ -59,19 +59,18 @@ window.ab167.dynamic =
       window.ab167.changeContent(
         div,
         `
-        <cdx-cta _ngcontent-app-c3412939284="" _nghost-app-c2668134291="" _nghost-app-c3713186528="" data-type="card" class="ng-star-inserted ab-167">
-          <cdx-card _ngcontent-app-c2668134291="" _nghost-app-c3713186528="" card-padding="none" card-center="false" card-rounded="false" class="card">
-              <a _ngcontent-app-c2668134291="" aria-label="linkText" class="cta-cover _noajax ng-star-inserted" href="/shop/productdetails?stockcode=375240&amp;name=woolworths-cheese-cheddar-everyday"></a><!---->
-              <figure _ngcontent-app-c2668134291=""><img _ngcontent-app-c2668134291="" deferload="" alt="null" class="" src="/content/banners/F2514-CIGD-Cheese-HFGaward.jpg"></figure>
-              <div _ngcontent-app-c2668134291="" class="cta-caption ng-star-inserted">
-                <p _ngcontent-app-c2668134291="" class="heading--5 ng-star-inserted">Winner, Best Cheese – Block category</p>
-                <button _ngcontent-app-c2668134291="" cdxbutton="" fillstyle="primaryInverse" _nghost-app-c2304148310="" aria-disabled="false" align="center" size="default" inline="false" data-orientation="horizontal" fullwidth="true" data-slotendsize="default" data-slotstartsize="default" aria-busy="false" data-completed="false" style="pointer-events: auto;" class="">
-                    <i _ngcontent-app-c2304148310="" class="button-icon--start"></i> Shop now <!----><!----><!----><!---->
+        <cdx-cta _ngcontent-app-c37882650="" _ngcontent-app-c3412939284="" _nghost-app-c2668134291="" _nghost-app-c3713186528="" data-type="card" class="ng-star-inserted ab-167">
+          <cdx-card _ngcontent-app-c37882650="" _nghost-app-c3713186528="" card-padding="none" card-center="false" card-rounded="false" class="card">
+              <a _ngcontent-app-c37882650="" aria-label="linkText" class="cta-cover _noajax ng-star-inserted" href="/shop/productdetails?stockcode=375240&amp;name=woolworths-cheese-cheddar-everyday"></a><!---->
+              <figure _ngcontent-app-c37882650=""><img _ngcontent-app-c37882650="" deferload="" alt="null" class="" src="/content/banners/F2514-CIGD-Cheese-HFGaward.jpg"></figure>
+              <div _ngcontent-app-c37882650="" class="cta-caption ng-star-inserted">
+                <p _ngcontent-app-c37882650="" class="heading--5 ng-star-inserted">Winner, Best Cheese – Block category</p>
+                <button _ngcontent-app-c37882650="" cdxbutton="" fillstyle="primaryInverse" _nghost-app-c2304148310="" aria-disabled="false" align="center" size="default" inline="false" data-orientation="horizontal" fullwidth="true" data-slotendsize="default" data-slotstartsize="default" aria-busy="false" data-completed="false" style="pointer-events: auto;" class="">
+                    <i _ngcontent-app-c2304148310="" class="button-icon--start"></i> Shop now 
                     <i _ngcontent-app-c2304148310="" class="button-icon--end">
                     </i>
                 </button>
               </div>
-              <!---->
           </cdx-card>
         </cdx-cta>
         `
