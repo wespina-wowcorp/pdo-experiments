@@ -99,7 +99,7 @@ const addPromotedTagToTiles = (tiles) => {
       imageLink.appendChild(div);
       WINDOW.changeContent(
         div,
-        `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
+        `<div _ngcontent-app-c929548239="" attr.aria-label="Promoted" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
       );
     }
   });
