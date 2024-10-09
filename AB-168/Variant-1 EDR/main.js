@@ -14,47 +14,18 @@ console.log(" >>>>>> AB-168 EDR Running >>>>>>");
 document.documentElement.dataset.webAb168 = "1";
 
 function dynamic() {
-  console.log('>>>>> PAGE LOADED >>>>>')
-  // new MutationObserver((mutationList, observer) => {
-  //   const mutationRecord = mutationList.filter(
-  //     (mutation) =>
-  //       mutation.type === "childList" &&
-  //       mutation.target.matches("div") &&
-  //       "addedNodes" in mutation &&
-  //       mutation.addedNodes.length > 0 &&
-  //       mutation.addedNodes[0].childNodes.length > 0 &&
-  //       mutation.addedNodes[0].childNodes[0].className === "header__logo"
-  //   )[0];
-  //   if (mutationRecord == null) return;
-  //   observer.disconnect();
-  //   mutationRecord.target.querySelector(":scope > a").addEventListener(
-  //     "click",
-  //     () => {
-  //       console.log("<<<<<AB-168>>>>>: A/A Test - Image Clicked");
-  //       return utag.link({
-  //         tealium_event: "ab_test",
-  //         test_name: "AB-168",
-  //         test_event: "aa_test",
-  //         test_component: "ab_search",
-  //         test_content: "Clicked",
-  //       });
-  //     },
-  //     // window.dataLayer.push({
-  //     //   event: "notification_event",
-  //     //   notification_type: "aa_test",
-  //     //   name: "Search Input",
-  //     //   value: "Clicked",
-  //     // }),
-  //     { once: true }
-  //   );
-
-  //   observer.observe(document.body, { childList: true, subtree: true });
-  // }).observe(document.body, { childList: true, subtree: true });
+  if (utag && utag.view) {
+    return utag.view({
+      tealium_event: "ab_test",
+      test_name: "AB-168",
+      test_event: "page_view",
+    });
+  }
 }
 
 try {
   if (document.body == null) {
-    document.addEventListener("DOMContentLoaded", dynamic);
+    document.addEventListener("DOMContentLoaded", dynamic, { once: true });
   } else {
     dynamic();
   }

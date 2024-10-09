@@ -94,14 +94,14 @@ const addPromotedTagToTiles = (tiles) => {
       addBackground(mediaQueryCondition.matches);
     }
 
-    if (imageLink) {
-      const div = document.createElement("div");
-      imageLink.appendChild(div);
-      WINDOW.changeContent(
-        div,
-        `<div _ngcontent-app-c929548239="" attr.aria-label="Promoted" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
-      );
-    }
+    // if (imageLink) {
+    //   const div = document.createElement("div");
+    //   imageLink.appendChild(div);
+    //   WINDOW.changeContent(
+    //     div,
+    //     `<div _ngcontent-app-c929548239="" attr.aria-label="Promoted" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
+    //   );
+    // }
   });
 };
 // ************************
@@ -114,7 +114,7 @@ const addPromotedTagToTiles = (tiles) => {
  */
 const placeElementAtIndex = (element, array, index) => {
   const gridItem = array[index];
-  const promotedTag = element.querySelector(":scope product-stamp-grid");
+  const promotedTag = element.querySelector(":scope product-stamp-grid .promoted");
   if (!element || !promotedTag) return;
   if (gridItem && gridItem.parentNode) {
     gridItem.parentNode.insertBefore(element, gridItem);

@@ -31,7 +31,7 @@ function dynamic() {
       .addEventListener(
         "click",
         function () {
-          if (utag) {
+          if (utag && utag.link) {
             return utag.link({
               tealium_event: "ab_test",
               test_name: "AB-168",
