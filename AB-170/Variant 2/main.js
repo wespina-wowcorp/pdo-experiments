@@ -22,11 +22,11 @@ document.documentElement.dataset.webAb170 = "2";
 
 window.ab170 = window.ab170 || {};
 
-window.ab170.tileDetails =
-  window.ab170.tileDetails || {
-    imageSrc: "https://placehold.co/537x322/yellow/grey?text=Halloween+Tile+Variation+2", // TODO - Change placeholder
-    tileLink: "https://www.woolworths.co.nz/shop/content/halloween?ab170-var=2"
-  };
+window.ab170.tileDetails = window.ab170.tileDetails || {
+  imageSrc:
+    "https://placehold.co/537x322/yellow/grey?text=Halloween+Tile+Variation+2", // TODO - Change placeholder
+  tileLink: "https://www.woolworths.co.nz/shop/content/halloween",
+};
 
 window.ab170.dynamic =
   window.ab170.dynamic ||
@@ -59,14 +59,28 @@ window.ab170.dynamic =
         // a click event listener is being added in the app so this overwrites the listener
         // https://stackoverflow.com/questions/68938727/remove-event-listener-without-knowing-what-the-call-back-function-is
 
-        cardLink.addEventListener('click', (e) => {
-          e.stopImmediatePropagation();
-          e.stopPropagation();
-        }, true);
+        cardLink.addEventListener(
+          "click",
+          (e) => {
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+
+            if (utag && utag.link) {
+              utag.link({
+                tealium_event: "ab_test",
+                test_name: "AB-170",
+                test_event: "click",
+                test_component: "specials_tile",
+                test_id: "variation_2",
+                test_content: "halloween",
+              });
+            }
+          },
+          true
+        );
       }
 
       observer.observe(document.body, { childList: true, subtree: true });
-
     }).observe(document.body, {
       childList: true,
       subtree: true,

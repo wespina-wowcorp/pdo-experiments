@@ -14,18 +14,20 @@ console.log(" >>>>>> AB-168 EDR Running >>>>>>");
 document.documentElement.dataset.webAb168 = "1";
 
 function dynamic() {
-  if (utag && utag.view) {
-    return utag.view({
-      tealium_event: "ab_test",
-      test_name: "AB-168",
-      test_event: "page_view",
-    });
-  }
+  setTimeout(() => {
+      if (utag && utag.view) {
+        return utag.view({
+          tealium_event: "ab_test",
+          test_name: "AB-168",
+          test_event: "page_view"
+        });
+      }
+  }, 2000);
 }
 
 try {
   if (document.body == null) {
-    document.addEventListener("DOMContentLoaded", dynamic, { once: true });
+    document.addEventListener("DOMContentLoaded", dynamic);
   } else {
     dynamic();
   }
