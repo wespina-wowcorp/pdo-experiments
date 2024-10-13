@@ -5,12 +5,12 @@
 // @description  CPP Reconfiguration V4
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials*
-// @match        https://wwwsit.woolworths.co.nz/shop/specials
-// @require      file:///Users/wilsonespina/Development/woolworths/pdo-experiments/AB-169/Variant-2/main.js
+// @match        https://wwwsit.woolworths.co.nz/shop/specials*
+// @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-2/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(" >>>>>> AB-169 Variant 2 Running >>>>>>");
+console.log(" >>>>>> AB-169 Variant 2 Running!! >>>>>>");
 
 /* COPY FROM BELOW TO OPTIMIZELY */
 
@@ -33,6 +33,9 @@ document.documentElement.dataset.webAb169 = "2";
  */
 const WINDOW = window["ab169"] || {};
 
+// TODO- remove this for post-prototype build
+// *******************************
+
 /**
  * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
  * @type {ChangeContent}
@@ -43,6 +46,7 @@ const changeContent = (targetElement, html) => {
     .createContextualFragment(html);
   targetElement.replaceWith(documentFragment);
 };
+// *******************************
 
 /**
  * @typedef {(tile: Element) => void} RemovePromotedTagFromTile
@@ -86,14 +90,14 @@ const addPromotedTagToTiles = (tiles) => {
       }
     }
 
-    if (imageLink) {
-      const div = document.createElement("div");
-      imageLink.appendChild(div);
-      WINDOW.changeContent(
-        div,
-        `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
-      );
-    }
+    // if (imageLink) {
+    //   const div = document.createElement("div");
+    //   imageLink.appendChild(div);
+    //   WINDOW.changeContent(
+    //     div,
+    //     `<div _ngcontent-app-c4204720579="" class="promoted ng-star-inserted ab169-promoted">Promoted</div>`
+    //   );
+    // }
   });
 };
 // ************************
@@ -105,8 +109,22 @@ const addPromotedTagToTiles = (tiles) => {
  * @type {PlaceElementAtIndex}
  */
 const placeElementAtIndex = (element, array, index) => {
-  const gridItem = array[index];
   if (!element) return;
+
+  const promotedTag = element.querySelector(
+    ":scope product-stamp-grid .promoted"
+  );
+
+  if (!promotedTag) {
+    return;
+  }
+
+  if (!element.classList.contains("ab-169-moved")) {
+    element.classList.add("ab-169-moved");
+  }
+
+  const gridItem = array[index];
+
   if (gridItem !== null && gridItem.parentNode && gridItem.nextSibling) {
     gridItem.parentNode.insertBefore(element, gridItem.nextSibling);
   }
@@ -121,8 +139,12 @@ const placeElementAtIndex = (element, array, index) => {
 const placeElementAtIndexWithoutTag = (element, array, index) => {
   const gridItem = array[index];
   if (!element || !gridItem) return;
+  let gridIndex = index;
+  if (!gridItem) {
+    gridIndex = array.length - 1;
+  }
+  WINDOW.placeElementAtIndex(element, array, gridIndex);
   WINDOW.removePromotedTagFromTile(element);
-  WINDOW.placeElementAtIndex(element, array, index);
 };
 
 /**
@@ -151,11 +173,11 @@ const dynamic = () => {
 
     observer.disconnect();
 
-    const promotedTag = specialsProductGrid.querySelector(
-      ":scope product-stamp-grid .ab169-promoted"
+    const experimentClass = specialsProductGrid.querySelector(
+      ":scope .ab-169-moved"
     );
 
-    if (!!promotedTag && (!pageParam || pageParam === "1")) {
+    if (!!experimentClass && (!pageParam || pageParam === "1")) {
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
@@ -164,42 +186,33 @@ const dynamic = () => {
 
     const childNodes = specialsProductGrid.children; // does not include comment
 
-    // Assumes CPP tiles are in positions 0 - 8 in the API response
-    const CPPTiles = Array.from(childNodes).slice(0, 7);
-
-    // WINDOW.removePromotedTagFromTiles(childNodes); // clean up before adding promoted tags
-
     if (!pageParam || pageParam === "1") {
       // TODO - remove after pre-build
       // ************************
-       WINDOW.addPromotedTagToTiles(CPPTiles);
+      // Assumes CPP tiles are in positions 0 - 8 in the API response
+      const CPPTiles = Array.from(childNodes).slice(0, 8);
+      WINDOW.addPromotedTagToTiles(CPPTiles);
       // ************************
       WINDOW.placeElementAtIndexWithoutTag(
         childNodes[5],
         childNodes,
-        childNodes.length - 1
+        23
       );
       WINDOW.placeElementAtIndexWithoutTag(
         childNodes[5],
         childNodes,
-        childNodes.length - 1
+        23
       );
       WINDOW.placeElementAtIndexWithoutTag(
         childNodes[5],
         childNodes,
-        childNodes.length - 1
-      );
-      WINDOW.placeElementAtIndexWithoutTag(
-        childNodes[childNodes.length - 1],
-        childNodes,
-        childNodes.length - 4
+        23
       );
 
       WINDOW.placeElementAtIndex(childNodes[1], childNodes, 8);
       WINDOW.placeElementAtIndex(childNodes[1], childNodes, 12);
       WINDOW.placeElementAtIndex(childNodes[1], childNodes, 16);
       WINDOW.placeElementAtIndex(childNodes[1], childNodes, 20);
-
     }
 
     observer.observe(document.body, {

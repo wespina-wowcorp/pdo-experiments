@@ -7,7 +7,7 @@
 // @description  CPP Reconfiguration V4
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials*
-// @require      file:///Users/wilsonespina/Development/woolworths/pdo-experiments/AB-169/Variant-1/main.js
+// @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-1/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
