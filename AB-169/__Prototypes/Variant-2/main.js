@@ -90,11 +90,11 @@ const addPromotedTagToTiles = (tiles) => {
       }
     }
 
-    // if (imageLink) {
-    //   const div = document.createElement("div");
-    //   div.classList.add("promoted");
-    //   imageLink.appendChild(div);
-    // }
+    if (imageLink) {
+      const div = document.createElement("div");
+      div.classList.add("promoted");
+      imageLink.appendChild(div);
+    }
   });
 };
 // ************************
