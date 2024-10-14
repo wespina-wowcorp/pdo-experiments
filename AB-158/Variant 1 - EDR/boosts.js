@@ -6,11 +6,12 @@
 // @author       Wilson
 // @match        https://www.everydayrewards.co.nz/boosts*
 // @match        https://www-uat.everydayrewards.co.nz/boosts*
+// @match        https://www.everydayrewards.co.nz/boosts*
 // @require      file://C:\Users\1442718\Development\overrides\AB-158\Variant 1 - EDR\boosts.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(">>>>>>>>>>>>>>>>>>>> AB-158 >>>>>>>>>>>>>>>>>>>>>>");
+console.log(">>>>>>>>>>>>>>>>>>>> AB-158 BOOSTS >>>>>>>>>>>>>>>>>>>>>>");
 
 document.documentElement.dataset.webAb158 = "1";
 
@@ -32,11 +33,7 @@ window.ab158.dynamic =
 
       const experimentClass = document.querySelector(".ab158");
 
-      if (!edrGridContainer) {
-        return observer.disconnect();
-      }
-
-      if (experimentClass) {
+      if (experimentClass || !edrGridContainer) {
         return observer.observe(document.body, {
           childList: true,
           subtree: true,
@@ -92,7 +89,9 @@ window.ab158.dynamic =
 
       if (edrGridContainer && boostsSection) {
         edrGridContainer.insertBefore(moreBoostsSection, boostsSection);
-        edrGridContainer.classList.add("ab158");
+        if (!edrGridContainer.classList.contains("ab158")) {
+          edrGridContainer.classList.add("ab158");
+        }
       }
 
       observer.observe(document.body, { childList: true, subtree: true });
@@ -102,7 +101,6 @@ window.ab158.dynamic =
     });
   });
 
-// Main function and starting point of the experiment.
 try {
   if (document.body == null) {
     // This happens when the experiment loads before the web page finishes loading.
@@ -113,15 +111,3 @@ try {
 } catch (error) {
   console.error("ab158:", error);
 }
-
-GM_addStyle(`
-  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"], link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(2) > section,
-  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"], link[href="https://www-uat.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(2) > section {
-    background-color: var(--color-secondary--light-grey) !important;
-  }
-
-  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(3) > section,
-  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www-uat.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(3) > section {
-    background-color: var(--color-secondary--white) !important;
-  }
-`);

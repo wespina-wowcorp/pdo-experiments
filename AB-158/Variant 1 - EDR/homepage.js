@@ -10,7 +10,7 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(">>>>>>>>>>>>>>>>>>>> AB-158 >>>>>>>>>>>>>>>>>>>>>>");
+console.log(">>>>>>>>>>>>>>>>>>>> AB-158 HOMEPAGE >>>>>>>>>>>>>>>>>>>>>>");
 
 document.documentElement.dataset.webAb158 = "1";
 
@@ -32,11 +32,7 @@ window.ab158.dynamic =
 
       const experimentClass = document.querySelector(".ab158");
 
-      if (!edrGridContainer) {
-        return observer.disconnect();
-      }
-
-      if (experimentClass) {
+      if (experimentClass || !edrGridContainer) {
         return observer.observe(document.body, {
           childList: true,
           subtree: true,
@@ -95,8 +91,11 @@ window.ab158.dynamic =
 
       if (edrGridContainer && boostsSection) {
         edrGridContainer.insertBefore(moreBoostsSection, boostsSection);
-        edrGridContainer.classList.add("ab158");
+        if (!edrGridContainer.classList.contains("ab158")) {
+          edrGridContainer.classList.add("ab158");
+        }
       }
+      observer.observe(document.body, { childList: true, subtree: true });
     }).observe(document.body, {
       childList: true,
       subtree: true,
