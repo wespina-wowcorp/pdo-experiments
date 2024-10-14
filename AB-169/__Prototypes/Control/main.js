@@ -1,5 +1,3 @@
-// @ts-check
-
 // ==UserScript==
 // @name         AB-169: Control
 // @namespace    https://woolworths-agile.atlassian.net/browse/AB-169
@@ -20,10 +18,10 @@ document.documentElement.dataset.webAb169 = "0";
 
 /**
  * @typedef {object} Ab169Object
- * @property {RemovePromotedTagFromTile} removePromotedTagFromTile
+ * @property {ChangeContent} changeContent
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
+ * @property {AddPromotedTagToTiles} addPromotedTagToTiles
  * @property {PlaceElementAtIndex} placeElementAtIndex
- * @property {PlaceElementAtIndexWithoutTag} placeElementAtIndexWithoutTag
  * @property {Dynamic} dynamic
  */
 
@@ -32,6 +30,21 @@ document.documentElement.dataset.webAb169 = "0";
  * @type {CustomWindow}
  */
 const WINDOW = window["ab169"] || {};
+
+// TODO- remove this for post-prototype build
+// *******************************
+
+/**
+ * @typedef {(targetElement: HTMLElement, html: string) => void} ChangeContent
+ * @type {ChangeContent}
+ */
+const changeContent = (targetElement, html) => {
+  const documentFragment = document
+    .createRange()
+    .createContextualFragment(html);
+  targetElement.replaceWith(documentFragment);
+};
+// *******************************
 
 /**
  * @typedef {(tile: Element) => void} RemovePromotedTagFromTile
@@ -53,6 +66,36 @@ const removePromotedTagFromTiles = (grid) => {
     WINDOW.removePromotedTagFromTile(tile);
   });
 };
+
+// TODO- remove this for post-prototype build
+// ************************
+/**
+ * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
+ * @type {AddPromotedTagToTiles}
+ */
+const addPromotedTagToTiles = (tiles) => {
+  tiles.forEach((tile, index) => {
+    if (tile) {
+      if (tile instanceof HTMLElement) {
+        tile.style.backgroundImage = `url(https://placehold.co/224x488/plum/grey?text=${
+          index + 1
+        })`;
+        tile.style.backgroundRepeat = "no-repeat";
+
+        const imageLink = tile.querySelector(
+          ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
+        );
+
+        if (imageLink) {
+          const div = document.createElement("div");
+          div.classList.add("promoted");
+          imageLink.appendChild(div);
+        }
+      }
+    }
+  });
+};
+// ************************
 
 /**
  * Places DOM element at index while keeping their event listeners attached.
@@ -129,6 +172,7 @@ const dynamic = () => {
       ":scope .ab-169-moved"
     );
 
+    // TODO - Verify more business rules
     if (!!experimentClass && (!pageParam || pageParam === "1")) {
       return observer.observe(document.body, {
         childList: true,
@@ -139,6 +183,12 @@ const dynamic = () => {
     const childNodes = specialsProductGrid.children; // does not include comment elements
 
     if (!pageParam || pageParam === "1") {
+      // TODO - remove after pre-build
+      // ************************
+      // Assumes CPP tiles are in positions 0 - 8 in the API response
+      const CPPTiles = Array.from(childNodes).slice(0, 8);
+      WINDOW.addPromotedTagToTiles(CPPTiles);
+      // ************************
       // Move first tile to last position x 8 times
       WINDOW.placeElementAtIndexWithoutTag(childNodes[0], childNodes, 23);
       WINDOW.placeElementAtIndexWithoutTag(childNodes[0], childNodes, 23);
@@ -160,10 +210,13 @@ const dynamic = () => {
   });
 };
 
+WINDOW.changeContent = WINDOW.changeContent || changeContent;
 WINDOW.removePromotedTagFromTiles =
   WINDOW.removePromotedTagFromTiles || removePromotedTagFromTiles;
 WINDOW.removePromotedTagFromTile =
   WINDOW.removePromotedTagFromTile || removePromotedTagFromTile;
+WINDOW.addPromotedTagToTiles =
+  WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
 WINDOW.placeElementAtIndex = WINDOW.placeElementAtIndex || placeElementAtIndex;
 WINDOW.placeElementAtIndexWithoutTag =
   WINDOW.placeElementAtIndexWithoutTag || placeElementAtIndexWithoutTag;
@@ -185,3 +238,4 @@ GM_addStyle(`
     background-color: pink;
   }
 `);
+

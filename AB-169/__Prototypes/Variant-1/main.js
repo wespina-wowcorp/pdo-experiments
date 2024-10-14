@@ -7,7 +7,6 @@
 // @description  CPP Reconfiguration V4
 // @author       Wilson
 // @match        https://www.woolworths.co.nz/shop/specials*
-// @match        https://wwwSIT.woolworths.co.nz/shop/specials*
 // @require      file://C:/Users/1442718/Development/overrides/AB-169/Variant-1/main.js
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -20,14 +19,15 @@ document.documentElement.dataset.webAb169 = "1";
  * @typedef {object} Ab169Var1Object
  * @property {RemovePromotedTagFromTile} removePromotedTagFromTile
  * @property {RemovePromotedTagFromTiles} removePromotedTagFromTiles
+ * @property {AddPromotedTagToTiles} addPromotedTagToTiles
  * @property {PlaceElementAtIndex} placeElementAtIndex
  * @property {PlaceElementAtIndexWithoutTag} placeElementAtIndexWithoutTag
  * @property {Dynamic} dynamic
  */
 
 /**
- * @typedef {Window & Ab169Var1Object} CustomWindowAb169Var1
- * @type {CustomWindowAb169Var1}
+ * @typedef {Window & Ab169Var1Object} CustomWindow
+ * @type {CustomWindow}
  */
 const WINDOW = window["ab169"] || {};
 
@@ -51,6 +51,36 @@ const removePromotedTagFromTiles = (grid) => {
     WINDOW.removePromotedTagFromTile(tile);
   });
 };
+
+// TODO- remove this for post-prototype build
+// ************************
+/**
+ * @typedef {(tiles: Element[]) => void} AddPromotedTagToTiles
+ * @type {AddPromotedTagToTiles}
+ */
+const addPromotedTagToTiles = (tiles) => {
+  tiles.forEach((tile, index) => {
+    const imageLink = tile.querySelector(
+      ":scope product-stamp-grid .product-entry.product-cup a.productImage-container"
+    );
+
+    if (tile) {
+      if (tile instanceof HTMLElement) {
+        tile.style.backgroundImage = `url(https://placehold.co/224x488/pink/grey?text=${
+          index + 1
+        })`;
+        tile.style.backgroundRepeat = "no-repeat";
+      }
+    }
+
+    if (imageLink) {
+      const div = document.createElement("div");
+      div.classList.add("promoted");
+      imageLink.appendChild(div);
+    }
+  });
+};
+// ************************
 
 /**
  * Places DOM element at index while keeping their event listeners attached.
@@ -123,11 +153,11 @@ const dynamic = () => {
 
     observer.disconnect();
 
-    const experimentClass = specialsProductGrid.querySelector(
-      ":scope .ab-169-moved"
+    const promotedTag = specialsProductGrid.querySelector(
+      ":scope product-stamp-grid .ab169-promoted"
     );
 
-    if (!!experimentClass && (!pageParam || pageParam === "1")) {
+    if (!!promotedTag && (!pageParam || pageParam === "1")) {
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
@@ -137,6 +167,13 @@ const dynamic = () => {
     const childNodes = specialsProductGrid.children; // does not include comment elements
 
     if (!pageParam || pageParam === "1") {
+      // TODO - remove after pre-build
+      // ************************
+      // Assumes CPP tiles are in positions 1 - 8 in the API response
+      const CPPTiles = Array.from(childNodes).slice(0, 8);
+      WINDOW.addPromotedTagToTiles(CPPTiles);
+      // ************************
+
       WINDOW.placeElementAtIndex(childNodes[4], childNodes, 13);
       WINDOW.placeElementAtIndex(childNodes[4], childNodes, 13);
       WINDOW.placeElementAtIndex(childNodes[4], childNodes, 13);
@@ -155,11 +192,9 @@ const dynamic = () => {
 
 WINDOW.removePromotedTagFromTiles =
   WINDOW.removePromotedTagFromTiles || removePromotedTagFromTiles;
-WINDOW.removePromotedTagFromTile =
-  WINDOW.removePromotedTagFromTile || removePromotedTagFromTile;
+WINDOW.addPromotedTagToTiles =
+  WINDOW.addPromotedTagToTiles || addPromotedTagToTiles;
 WINDOW.placeElementAtIndex = WINDOW.placeElementAtIndex || placeElementAtIndex;
-WINDOW.placeElementAtIndexWithoutTag =
-  WINDOW.placeElementAtIndexWithoutTag || placeElementAtIndexWithoutTag;
 WINDOW.dynamic = WINDOW.dynamic || dynamic;
 
 try {
