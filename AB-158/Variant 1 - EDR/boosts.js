@@ -41,11 +41,11 @@ window.ab158.dynamic =
       }
 
       const boostsSection = document.querySelector(
-        "edr-dc-dynamic-content edr-section:nth-of-type(2)"
+        "edr-dc-dynamic-content edr-section.anchor-point-3NTbY74npqKutVV12AGOh1"
       );
 
       const moreBoostsSection = document.querySelector(
-        "edr-dc-dynamic-content edr-section:nth-of-type(3)"
+        "edr-dc-dynamic-content edr-section.anchor-point-5MUMWDpdZELR6ljNpKUBtO"
       );
 
       if (boostsSection && moreBoostsSection) {
