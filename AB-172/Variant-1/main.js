@@ -63,17 +63,17 @@ window.ab172.dynamic =
           if (subheading) {
             subheading.ariaHidden = "true";
             subheading.classList.add("ab172-sr-hidden");
+          }
 
-            const span = document.createElement("span");
-            topSection.insertBefore(span, subheading);
-            window.ab172.changeContent(
-              span,
-              `<p style="text-align:center" class="ab172">
+          const span = document.createElement("span");
+          topSection.insertBefore(span, subheading);
+          window.ab172.changeContent(
+            span,
+            `<p style="text-align:center" class="ab172">
               <a href="/shop/securelogin" class="ab172-sign-in"><span>Sign in</span></a> or <a href="/shop/securelogin" class="ab172-register"><span>register</span></a> to activate your Boosts, and discover Member Prices and Specials on products you love.
              </p>
             `
-            );
-          }
+          );
         }
       }, 0);
 

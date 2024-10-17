@@ -40,11 +40,11 @@ window.ab158.dynamic =
       }
 
       const boostsSection = document.querySelector(
-        "edr-dc-dynamic-content edr-section:nth-of-type(2)"
+        "edr-dc-dynamic-content edr-section.anchor-point-5osXGSUsuMLr5C0QJ1TjG7"
       );
 
       const moreBoostsSection = document.querySelector(
-        "edr-dc-dynamic-content edr-section:nth-of-type(3)"
+        "edr-dc-dynamic-content edr-section.anchor-point-3DzE5FSmQN0rQkfgAI5693"
       );
 
       if (boostsSection && moreBoostsSection) {
@@ -115,13 +115,13 @@ try {
 }
 
 GM_addStyle(`
-  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"], link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(2) > section,
-  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"], link[href="https://www-uat.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(2) > section {
+  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"], link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section.anchor-point-5osXGSUsuMLr5C0QJ1TjG7" > section,
+  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www-uat.everydayrewards.co.nz/"], link[href="https://www-uat.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section.anchor-point-5osXGSUsuMLr5C0QJ1TjG7" > section {
     background-color: var(--color-secondary--light-grey) !important;
   }
 
-  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(3) > section,
-  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www-uat.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section:nth-of-type(3) > section {
+  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section.anchor-point-3DzE5FSmQN0rQkfgAI5693 > section,
+  html:not(#ab158)[data-web-ab158="1"] head:has(link[href="https://www-uat.everydayrewards.co.nz/"]) + body edr-dc-dynamic-content edr-section.anchor-point-3DzE5FSmQN0rQkfgAI5693 > section {
     background-color: var(--color-secondary--white) !important;
   }
 `);
