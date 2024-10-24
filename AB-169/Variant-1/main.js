@@ -69,10 +69,6 @@ const placeElementAtIndex = (element, array, index) => {
     return;
   }
 
-  if (!element.classList.contains("ab-169-moved")) {
-    element.classList.add("ab-169-moved");
-  }
-
   const gridItem = array[index];
 
   if (gridItem !== null && gridItem.parentNode && gridItem.nextSibling) {
@@ -109,6 +105,8 @@ const dynamic = () => {
 
     const params = new URLSearchParams(document.location.search);
     const pageParam = params.get("page");
+    const filtersParam = params.get("filters");
+    const sortParam = params.get("sort");
 
     const specialsProductGrid = document.querySelector(
       "wnz-search .contentContainer-main product-grid"
@@ -123,20 +121,20 @@ const dynamic = () => {
 
     observer.disconnect();
 
-    const experimentClass = specialsProductGrid.querySelector(
-      ":scope .ab-169-moved"
-    );
+    const childNodes = specialsProductGrid.children; // does not include comment elements
 
-    if (!!experimentClass && (!pageParam || pageParam === "1")) {
+    const isSpecialsPageOneWithDefaultFilters =
+      (pageParam === null || pageParam === "1") &&
+      filtersParam === null &&
+      (sortParam === null || sortParam === "BrowseRelevance");
+
+    if (!isSpecialsPageOneWithDefaultFilters) {
+      WINDOW.removePromotedTagFromTiles(childNodes);
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
       });
-    }
-
-    const childNodes = specialsProductGrid.children; // does not include comment elements
-
-    if (!pageParam || pageParam === "1") {
+    } else {
       WINDOW.placeElementAtIndex(childNodes[4], childNodes, 13);
       WINDOW.placeElementAtIndex(childNodes[4], childNodes, 13);
       WINDOW.placeElementAtIndex(childNodes[4], childNodes, 13);
