@@ -42,6 +42,9 @@ const removePromotedTagFromTile = (tile) => {
   if (promotedTag) {
     promotedTag.remove();
   }
+  if (tile.classList.contains("ab-169-moved")) {
+    tile.classList.remove("ab-169-moved");
+  }
 };
 
 /**
@@ -69,6 +72,10 @@ const placeElementAtIndex = (element, array, index) => {
 
   if (!promotedTag) {
     return;
+  }
+
+  if (!element.classList.contains("ab-169-moved")) {
+    element.classList.add("ab-169-moved");
   }
 
   const gridItem = array[index];
@@ -118,10 +125,17 @@ const dynamic = () => {
     );
 
     if (!includesSpecialsGrid || !specialsProductGrid) {
-      return;
+      return observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
     }
 
     observer.disconnect();
+
+    const experimentClass = specialsProductGrid.querySelector(
+      ":scope .ab-169-moved"
+    );
 
     const childNodes = specialsProductGrid.children; // does not include comment elements
 
@@ -137,9 +151,11 @@ const dynamic = () => {
         subtree: true,
       });
     } else {
-      WINDOW.placeElementAtIndexWithoutTag(childNodes[5], childNodes, 23);
-      WINDOW.placeElementAtIndexWithoutTag(childNodes[5], childNodes, 23);
-      WINDOW.placeElementAtIndexWithoutTag(childNodes[5], childNodes, 23);
+      if (!experimentClass) {
+        WINDOW.placeElementAtIndexWithoutTag(childNodes[5], childNodes, 23);
+        WINDOW.placeElementAtIndexWithoutTag(childNodes[5], childNodes, 23);
+        WINDOW.placeElementAtIndexWithoutTag(childNodes[5], childNodes, 23);
+      }
 
       WINDOW.placeElementAtIndex(childNodes[1], childNodes, 8);
       WINDOW.placeElementAtIndex(childNodes[1], childNodes, 12);

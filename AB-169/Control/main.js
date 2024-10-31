@@ -117,7 +117,10 @@ const dynamic = () => {
     );
 
     if (!includesSpecialsGrid || !specialsProductGrid) {
-      return;
+      return observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
     }
 
     observer.disconnect();
