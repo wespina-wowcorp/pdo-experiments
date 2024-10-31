@@ -120,11 +120,8 @@ const dynamic = () => {
     const specialsProductGrid = document.querySelector(
       "wnz-search .contentContainer-main product-grid"
     );
-    const includesSpecialsGrid = mutationList.some(
-      (mutation) => mutation.target === specialsProductGrid
-    );
 
-    if (!includesSpecialsGrid || !specialsProductGrid) {
+    if (!specialsProductGrid) {
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
