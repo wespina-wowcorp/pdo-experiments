@@ -1,15 +1,14 @@
 document.documentElement.dataset.webAb158 = "1";
-console.log(">>>>>>>>>>>>>>>>>>>> AB-158 COMBINED??? >>>>>>>>>>>>>>>>>>>>>>");
 
 window.ab158 = window.ab158 || {};
 
-window.ab158.isNotValidUrl =
-  window.ab158.isNotValidUrl ||
-  (() => !location.pathname.startsWith("/boosts") && location.pathname !== "/");
+window.ab158.isValidUrl =
+  window.ab158.isValidUrl ||
+  (() => location.pathname.startsWith("/boosts") || location.pathname === "/");
 
 window.ab158.handleBoostsPage =
   window.ab158.handleBoostsPage ||
-  (() => {
+  ((observer) => {
     const edrGridContainer = document.querySelector(
       "edr-dc-dynamic-content:has(> edr-section)"
     );
@@ -20,13 +19,7 @@ window.ab158.handleBoostsPage =
       "edr-dc-dynamic-content edr-section edr-app-boost-offers-grid.anchor-point-6V3rNbyhl0iYzPRJPrwrS"
     );
 
-    const includesBoostsSections = mutationList.some(
-      (mutation) =>
-        mutation.target === boostsSectionContent ||
-        mutation.target === moreBoostsSectionContent
-    );
-
-    if (!includesBoostsSections) {
+    if (!moreBoostsSectionContent || !boostsSectionContent) {
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
@@ -87,7 +80,7 @@ window.ab158.handleBoostsPage =
 
 window.ab158.handleHomePage =
   window.ab158.handleHomePage ||
-  (() => {
+  ((observer) => {
     // Homepage
     const boostsSectionContent = document.querySelector(
       "edr-dc-dynamic-content > edr-section.anchor-point-5osXGSUsuMLr5C0QJ1TjG7 edr-app-boost-offers-grid.anchor-point-6UMNWJEAHaof05gwXBXxTY"
@@ -96,13 +89,7 @@ window.ab158.handleHomePage =
       "edr-dc-dynamic-content edr-section.anchor-point-3DzE5FSmQN0rQkfgAI5693 edr-app-boost-offers-grid.anchor-point-5kaqaQI1WboJqb0LVRKM5K"
     );
 
-    const includesBoostsSections = mutationList.some(
-      (mutation) =>
-        mutation.target === boostsSectionContent ||
-        mutation.target === moreBoostsSectionContent
-    );
-
-    if (!includesBoostsSections) {
+    if (!moreBoostsSectionContent || !boostsSectionContent) {
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
@@ -122,7 +109,6 @@ window.ab158.handleHomePage =
     );
 
     if (boostsSection && moreBoostsSection) {
-      console.log(">>> BOTH EXISTS >>>>>");
       const boostsHeadingEl = boostsSection.querySelector(
         ":scope edr-heading h3"
       );
@@ -173,16 +159,16 @@ window.ab158.dynamic =
   window.ab158.dynamic ||
   (() => {
     new MutationObserver((mutationList, observer) => {
-      if (window.ab158.isNotValidUrl) {
+      if (!window.ab158.isValidUrl) {
         return observer.disconnect();
       }
 
       observer.disconnect();
 
       if (location.pathname.startsWith("/boosts")) {
-        window.ab158.handleBoostsPage();
+        window.ab158.handleBoostsPage(observer);
       } else {
-        window.ab158.handleHomePage();
+        window.ab158.handleHomePage(observer);
       }
 
       observer.observe(document.body, { childList: true, subtree: true });
@@ -203,5 +189,3 @@ try {
 } catch (error) {
   console.error("ab158:", error);
 }
-
-
