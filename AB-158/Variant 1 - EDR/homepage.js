@@ -30,9 +30,7 @@ window.ab158.dynamic =
         "edr-dc-dynamic-content:has(> edr-section)"
       );
 
-      const experimentClass = document.querySelector(".ab158");
-
-      if (experimentClass || !edrGridContainer) {
+      if (!edrGridContainer) {
         return observer.observe(document.body, {
           childList: true,
           subtree: true,
@@ -91,9 +89,6 @@ window.ab158.dynamic =
 
       if (edrGridContainer && boostsSection) {
         edrGridContainer.insertBefore(moreBoostsSection, boostsSection);
-        if (!edrGridContainer.classList.contains("ab158")) {
-          edrGridContainer.classList.add("ab158");
-        }
       }
       observer.observe(document.body, { childList: true, subtree: true });
     }).observe(document.body, {
