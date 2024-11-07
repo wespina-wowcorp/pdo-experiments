@@ -12,19 +12,6 @@ window.ab158.handleBoostsPage =
     const edrGridContainer = document.querySelector(
       "edr-dc-dynamic-content:has(> edr-section)"
     );
-    const boostsSectionContent = document.querySelector(
-      "edr-dc-dynamic-content > edr-section edr-app-boost-offers-grid.anchor-point-56bAAVgA8Z9MFb3Addl9Sn"
-    );
-    const moreBoostsSectionContent = document.querySelector(
-      "edr-dc-dynamic-content edr-section edr-app-boost-offers-grid.anchor-point-6V3rNbyhl0iYzPRJPrwrS"
-    );
-
-    if (!moreBoostsSectionContent || !boostsSectionContent) {
-      return observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
-    }
 
     const boostsSection = document.querySelector(
       "edr-dc-dynamic-content edr-section.anchor-point-3NTbY74npqKutVV12AGOh1"
@@ -33,6 +20,13 @@ window.ab158.handleBoostsPage =
     const moreBoostsSection = document.querySelector(
       "edr-dc-dynamic-content edr-section.anchor-point-5MUMWDpdZELR6ljNpKUBtO"
     );
+
+    if (!boostsSection || !moreBoostsSection) {
+      return observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
 
     if (boostsSection && moreBoostsSection) {
       const boostsHeadingEl = boostsSection.querySelector(
