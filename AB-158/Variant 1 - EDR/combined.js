@@ -21,7 +21,9 @@ window.ab158.handleBoostsPage =
       "edr-dc-dynamic-content edr-section.anchor-point-5MUMWDpdZELR6ljNpKUBtO"
     );
 
-    if (!boostsSection || !moreBoostsSection) {
+    const experimentClassExists = document.querySelector(".ab-158");
+
+    if (!boostsSection || !moreBoostsSection || experimentClassExists) {
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
@@ -55,6 +57,7 @@ window.ab158.handleBoostsPage =
       if (moreBoostsHeadingEl && boostsHeadingEl) {
         moreBoostsHeadingEl.textContent = boostsHeadingEl.textContent;
         boostsHeadingEl.style.display = "none"; // add a class instead
+        moreBoostsHeadingEl.classList.add("ab-158");
       }
       if (moreBoostsSubheadingEl && boostsSubheadingEl) {
         moreBoostsSubheadingEl.textContent = boostsSubheadingEl.textContent;
@@ -83,7 +86,9 @@ window.ab158.handleHomePage =
       "edr-dc-dynamic-content edr-section.anchor-point-3DzE5FSmQN0rQkfgAI5693 edr-app-boost-offers-grid.anchor-point-5kaqaQI1WboJqb0LVRKM5K"
     );
 
-    if (!moreBoostsSectionContent || !boostsSectionContent) {
+    const experimentClassExists = document.querySelector(".ab-158");
+
+    if (!moreBoostsSectionContent || !boostsSectionContent || experimentClassExists) {
       return observer.observe(document.body, {
         childList: true,
         subtree: true,
@@ -131,6 +136,7 @@ window.ab158.handleHomePage =
       if (moreBoostsHeadingEl && boostsHeadingEl) {
         moreBoostsHeadingEl.textContent = boostsHeadingEl.textContent;
         boostsHeadingEl.style.display = "none";
+        moreBoostsHeadingEl.classList.add("ab-158");
       }
       if (moreBoostsSubheadingEl && boostsSubheadingEl) {
         moreBoostsSubheadingEl.textContent = boostsSubheadingEl.textContent;

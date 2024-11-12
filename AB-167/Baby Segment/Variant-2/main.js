@@ -1,17 +1,3 @@
-// ==UserScript==
-// @name         AB-167: Variant 2
-// @namespace    https://woolworths-agile.atlassian.net/browse/AB-167
-// @version      AB-167_variant_2
-// @description  Cartology Personalization - Pet Segment
-// @author       Wilson
-// @match        https://wwwsit.woolworths.co.nz/lists/myfavourites*
-// @match        https://www.woolworths.co.nz/lists/myfavourites*
-// @require      file://C:/Users/1442718/Development/overrides/AB-167/Pet Segment/Variant-1/main.js
-// @grant        GM_addStyle
-// ==/UserScript==
-
-console.log(">>>>>> AB-167 variation 2 - Pet Segment >>>>>>>>");
-
 document.documentElement.dataset.webAb167 = "2";
 
 window.ab167 = window.ab167 || {};

@@ -1,17 +1,3 @@
-// ==UserScript==
-// @name         AB-167: Variant 1
-// @namespace    https://woolworths-agile.atlassian.net/browse/AB-167
-// @version      AB-167_variant_1
-// @description  Cartology Personalization - Baby Segment
-// @author       Wilson
-// @match        https://wwwsit.woolworths.co.nz/lists/myfavourites*
-// @match        https://www.woolworths.co.nz/lists/myfavourites*
-// @require      file://C:/Users/1442718/Development/overrides/AB-167/Baby Segment/Variant-1/main.js
-// @grant        GM_addStyle
-// ==/UserScript==
-
-console.log(">>>>>> AB-167 variation 1 - Baby Segment >>>>>>>>");
-
 document.documentElement.dataset.webAb167 = "1";
 
 window.ab167 = window.ab167 || {};
@@ -88,20 +74,3 @@ try {
   console.error("ab167:", error);
 }
 
-GM_addStyle(`
-  html:not(#ab167)[data-web-ab167="1"] .contentContainer-main product-grid cdx-cta {
-    display: none;
-  }
-`);
-
-// 1st tile - Generic
-// 2nd tile - Pet Food
-// 3rd tile - Baby
-
-// Baby Segment
-// V1 - show 1st tile
-// V2 - show 3rd tile
-
-// Pet Segment
-// V1 - show 1st tile
-// V2 - show 2nd tile
