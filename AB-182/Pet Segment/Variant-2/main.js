@@ -92,19 +92,6 @@ window.ab182.dynamic =
         (e) => {
           e.stopImmediatePropagation();
           e.stopPropagation();
-
-          console.log(">>> CLICKED BANNER >>>>>");
-          // TODO - confirm with TASH
-          // if (utag && utag.link) {
-          //   utag.link({
-          //     tealium_event: "ab_test",
-          //     test_name: "AB-182",
-          //     test_event: "click",
-          //     test_component: "my_favourites_banner_pet",
-          //     test_id: "variation_2_pet_segment",
-          //     test_content: "pet",
-          //   });
-          // }
         },
         true
       );

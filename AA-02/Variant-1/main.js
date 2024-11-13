@@ -1,18 +1,3 @@
-// ==UserScript==
-// @name         AA-02: Variant 1
-// @namespace    https://woolworths-agile.atlassian.net/browse/AA-02
-// @version      AA-02_variant_1
-// @description  AA-02 [SIT - DEV] - A/A Test for Web Experimentation (Tealium Events)
-// @author       Wilson
-// @match        https://wwwsit.woolworths.co.nz/
-// @require      file://C:/Users/1442718/Development/overrides/AA-02/Variant-1/main.js
-// @grant        GM_addStyle
-// ==/UserScript==
-
-console.log(" >>>>>> AB-AA Running >>>>>>");
-
-/* COPY FROM BELOW TO OPTIMIZELY */
-
 document.documentElement.dataset.aaWeb2 = "1";
 console.info(
   "Optimizely Web Experimentation -",
@@ -48,8 +33,8 @@ window.aaWeb2.isValidUrl =
 
 window.aaWeb2.utagLink =
   window.aaWeb2.utagLink ||
-  (() => {
-    if (utag && utag.link) return utag.link;
+  ((tealiumEvent) => {
+    if (utag && utag.link) return utag.link(tealiumEvent);
     return null;
   });
 
@@ -64,14 +49,16 @@ window.aaWeb2.dynamic =
       .waitForElement("global-nav-search")
       .then((globalNavSearchEl) => {
         const searchBar = globalNavSearchEl.querySelector(":scope #search");
-        searchBar.addEventListener("click", () => {
-          window.aaWeb2.utagLink({
-            tealium_event: "ab_test",
-            test_name: "notification_event",
-            test_event: "aa_test_2",
-            test_component: "search_input",
+        if (searchBar) {
+          searchBar.addEventListener("click", () => {
+            window.aaWeb2.utagLink({
+              tealium_event: "ab_test",
+              test_name: "notification_event",
+              test_event: "aa_test_2",
+              test_component: "search_input",
+            });
           });
-        });
+        }
       });
   });
 
