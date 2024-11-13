@@ -54,7 +54,7 @@ window.ab182.init =
                   <a href="${window.ab182.bannerLink}" class="ab182">
                       <picture>
                           <source srcset="${window.ab182.bannerImageDesktop}" media="(width > 640px)">
-                          <img src="${window.ab182.bannerImageMobile}" alt="Delivery Saver Banner" style="margin-block: 1rem !important; width: 100%; height: auto;">
+                          <img src="${window.ab182.bannerImageMobile}" alt="" style="margin-block: 1rem !important; width: 100%; height: auto;">
                       </picture>
                   </a>
                 </div>
