@@ -62,6 +62,7 @@ variantArray.forEach((variant) => {
     urlMatch2 ? "\n// @match        " + urlMatch2 : ""
   }
 // @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
+// @require      https://cdn.optimizely.com/js/21124251956.js
 // @grant        GM_addStyle
 // ==/UserScript==
 

@@ -9,13 +9,19 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-console.log(' >>>>>> AB-182 Running >>>>>>');
+console.log(" >>>>>> AB-182 Running >>>>>>");
 
 /* COPY FROM BELOW TO OPTIMIZELY */
 
 document.documentElement.dataset.webAb182 = "2";
 
 window.ab182 = window.ab182 || {};
+
+window.ab182.utils = window.ab182.utils || window.optimizely.get("utils");
+
+window.ab182.waitForElement =
+  window.ab182.waitForElement ||
+  ((selector) => window.ab182.utils.waitForElement(selector));
 
 window.ab182.bannerImageDesktop =
   window.ab182.bannerImageDesktop ||
@@ -41,91 +47,69 @@ window.ab182.changeContent =
     targetElement.replaceWith(documentFragment);
   });
 
-window.ab182.dynamic =
-  window.ab182.dynamic ||
+window.ab182.init =
+  window.ab182.init ||
   (() => {
-    new MutationObserver((mutationList, observer) => {
-      if (!window.ab182.isValidUrl) {
-        return observer.disconnect();
-      }
+    if (!window.ab182.isValidUrl) {
+      return observer.disconnect();
+    }
 
-      const recipesBanner = document.querySelector(
-        "wnz-home > section > dc-container recipe-grid-container"
-      );
+    window.ab182
+      .waitForElement("wnz-home > #dynamic-content-bottom-panel > dc-container")
+      .then((pageContainer) => {
+        if (pageContainer.childNodes.length > 0) {
+          const banner = document.createElement("div");
+          pageContainer.appendChild(banner);
 
-      const experimentBanner = document.querySelector(".ab182");
+          window.ab182.changeContent(
+            banner,
+            `
+              <div _ngcontent-app-c3428906611="" class="init-content-row row-fluid ng-star-inserted">
+              <div class="init-content2-item init-content2-item-html ng-star-inserted">
+                  <a href="${window.ab182.bannerLink}" class="ab182">
+                      <picture>
+                          <source srcset="${window.ab182.bannerImageDesktop}" media="(width > 640px)">
+                          <img src="${window.ab182.bannerImageMobile}" alt="Delivery Saver Banner" style="margin-block: 1rem !important; width: 100%; height: auto;">
+                      </picture>
+                  </a>
+                </div>
+              </div>
+            `
+          );
 
-      if (!recipesBanner || experimentBanner) {
-        return observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-        });
-      }
+          const newExperimentBanner =
+            pageContainer.querySelector(":scope .ab182");
 
-      const pageContainer = document.querySelector(
-        "wnz-home > #dynamic-content-bottom-panel"
-      );
-
-      const banner = document.createElement("div");
-      pageContainer.appendChild(banner);
-
-      window.ab182.changeContent(
-        banner,
-        `
-        <div _ngcontent-app-c3428906611="" class="dynamic-content-row row-fluid ng-star-inserted">
-         <div class="dynamic-content2-item dynamic-content2-item-html ng-star-inserted">
-            <a href="${window.ab182.bannerLink}" class="ab182">
-                <picture>
-                    <source srcset="${window.ab182.bannerImageDesktop}" media="(width > 640px)">
-                    <img src="${window.ab182.bannerImageMobile}" alt="Baby Banner" style="margin-block: 1rem !important; width: 100%; height: auto;">
-                </picture>
-            </a>
-          </div>
-        </div>
-      `
-      );
-
-      const newExperimentBanner = pageContainer.querySelector(":scope .ab182");
-
-      newExperimentBanner.addEventListener(
-        "click",
-        (e) => {
-          e.stopImmediatePropagation();
-          e.stopPropagation();
-
-          console.log(">>> CLICKED BANNER >>>>>");
-          // TODO - confirm with TASH
-          // if (utag && utag.link) {
-          //   utag.link({
-          //     tealium_event: "ab_test",
-          //     test_name: "AB-182",
-          //     test_event: "click",
-          //     test_component: "my_favourites_banner_baby",
-          //     test_id: "variation_1_baby_segment",
-          //     test_content: "delivery_saver",
-          //   });
-          // }
-        },
-        true
-      );
-
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
+          if (newExperimentBanner) {
+            newExperimentBanner.addEventListener(
+              "click",
+              (e) => {
+                console.log(">>> CLICKED BANNER! >>>>>");
+                // TODO - confirm with TASH
+                // if (utag && utag.link) {
+                //   utag.link({
+                //     tealium_event: "ab_test",
+                //     test_name: "AB-182",
+                //     test_event: "click",
+                //     test_component: "my_favourites_banner_baby",
+                //     test_id: "variation_2_baby_segment",
+                //     test_content: "baby,
+                //   });
+                // }
+              },
+              true
+            );
+          }
+        }
       });
-    }).observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
   });
 
 try {
   if (document.body == null) {
-    document.addEventListener("DOMContentLoaded", window.ab182.dynamic);
+    document.addEventListener("DOMContentLoaded", window.ab182.init);
   } else {
-    window.ab182.dynamic();
+    window.ab182.init();
   }
 } catch (error) {
   console.error("ab182:", error);
 }
-
