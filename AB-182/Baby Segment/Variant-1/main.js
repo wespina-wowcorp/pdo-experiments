@@ -77,6 +77,7 @@ window.ab182.addObserver =
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           window.ab182.utagView(window.ab182.utagViewEvent);
+          observer.disconnect()
         }
       });
     };
