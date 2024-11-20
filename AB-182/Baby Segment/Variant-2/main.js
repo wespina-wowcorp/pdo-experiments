@@ -85,7 +85,6 @@ window.ab182.init =
               "click",
               (e) => {
                 console.log(">>> CLICKED BANNER! >>>>>");
-                // TODO - confirm with TASH
                 // if (utag && utag.link) {
                 //   utag.link({
                 //     tealium_event: "ab_test",
