@@ -51,8 +51,8 @@ window.ab182.utagViewEvent = window.ab182.utagViewEvent || {
   test_name: "AB-182",
   test_event: "View promo",
   test_component: "Promo asset",
-  test_id: "Pet segment V2",
-  test_content: "Purina One Try me",
+  test_id: "Pet segment V1",
+  test_content: "Delivery Saver free 30 day trial",
 };
 
 window.ab182.utagLinkEvent = window.ab182.utagLinkEvent || {
@@ -61,7 +61,7 @@ window.ab182.utagLinkEvent = window.ab182.utagLinkEvent || {
   test_event: "Click promo",
   test_component: "Promo asset",
   test_id: "Pet segment V2",
-  test_content: "Purina One Try me",
+  test_content: "Delivery Saver free 30 day trial",
 };
 
 window.ab182.addObserver =
