@@ -61,8 +61,8 @@ variantArray.forEach((variant) => {
 // @match        ${urlMatch}${
     urlMatch2 ? "\n// @match        " + urlMatch2 : ""
   }
-// @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
 // @require      https://cdn.optimizely.com/js/21124251956.js
+// @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
 // @grant        GM_addStyle
 // ==/UserScript==`;
 
@@ -84,9 +84,9 @@ window.ab${testNumber}.init =
     window.ab${testNumber}
       .waitForElement("") // UPDATE SELECTOR
       .then((pageContainer) => {
-        // EXPERIMENT RELATE CHANGES
+        // EXPERIMENT RELATED CHANGES
         
-      }
+      });
   });
 
 try {
