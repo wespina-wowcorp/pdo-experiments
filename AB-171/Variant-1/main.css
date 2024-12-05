@@ -1,0 +1,9 @@
+wnz-content
+  .main
+  wnz-search
+  .search-results
+  .contentContainer-main
+  product-grid
+  cdx-cta {
+  display: none;
+}

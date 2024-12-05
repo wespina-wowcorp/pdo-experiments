@@ -14,7 +14,6 @@ window.ab171.showTile =
     if (!targetElement) return;
 
     targetElement.style.display = "block";
-    targetElement.style.border = "10px solid purple"; // TODO - Remove after prototype
   });
 
 window.ab171.init =
@@ -25,14 +24,11 @@ window.ab171.init =
     window.ab171
       .waitForElement(
         "wnz-content .main wnz-search .search-results .contentContainer-main product-grid"
-      ) // UPDATE SELECTOR
+      )
       .then((productGrid) => {
-        // EXPERIMENT RELATE CHANGES
-
         const cdxCtaElement = productGrid.querySelectorAll(":scope cdx-cta");
-        console.log(">>>🚀 ~ .then ~ cdxCtaElement:", cdxCtaElement);
 
-        if (cdxCtaElement.length === 1) { // TODO - check position is 5
+        if (cdxCtaElement.length === 1) { // TODO - check position is 5?
           window.ab171.showTile(cdxCtaElement[0]);
         }
       });
