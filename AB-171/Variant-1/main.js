@@ -26,10 +26,10 @@ window.ab171.init =
         "wnz-content .main wnz-search .search-results .contentContainer-main product-grid"
       )
       .then((productGrid) => {
-        const cdxCtaElement = productGrid.querySelectorAll(":scope cdx-cta");
+        const cigTile = productGrid.querySelectorAll(":scope cdx-cta");
 
-        if (cdxCtaElement.length === 1) { // TODO - check position is 5?
-          window.ab171.showTile(cdxCtaElement[0]);
+        if (cigTile.length === 1) { // TODO - check position is 5?
+          window.ab171.showTile(cigTile[0]);
         }
       });
   });
