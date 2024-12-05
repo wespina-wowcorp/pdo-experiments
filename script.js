@@ -52,7 +52,7 @@ variantArray.forEach((variant) => {
     throw new Error('Test ID must start with "AB-"');
   }
 
-  const content = `// ==UserScript==
+  const tamperMonkeyContent = `// ==UserScript==
 // @name         ${testId}: Variant ${variantNumber}
 // @namespace    https://woolworths-agile.atlassian.net/browse/${testId}
 // @version      ${testId}_variant_${variantNumber}
@@ -64,34 +64,36 @@ variantArray.forEach((variant) => {
 // @require      file://C:/Users/1442718/Development/overrides/${testId}/Variant-${variantNumber}/main.js
 // @require      https://cdn.optimizely.com/js/21124251956.js
 // @grant        GM_addStyle
-// ==/UserScript==
+// ==/UserScript==`;
 
-console.log(' >>>>>> AB-${testNumber} Running >>>>>>');
-
-/* COPY FROM BELOW TO OPTIMIZELY */
-
-document.documentElement.dataset.webAb${testNumber} = "${variantNumber}";
+  const content = `document.documentElement.dataset.webAb${testNumber} = "${variantNumber}";
 
 window.ab${testNumber} = window.ab${testNumber} || {};
 
-window.ab${testNumber}.dynamic =
-  window.ab${testNumber}.dynamic ||
+window.ab${testNumber}.utils = window.ab${testNumber}.utils || window.optimizely.get("utils");
+
+window.ab${testNumber}.waitForElement =
+  window.ab${testNumber}.waitForElement ||
+  ((selector) => window.ab${testNumber}.utils.waitForElement(selector));
+
+window.ab${testNumber}.init =
+  window.ab${testNumber}.init ||
   (() => {
-    new MutationObserver((mutationList, observer) => {
+    // CHECK IF IT IS VALID URL
 
-      /* INSERT CODE HERE */
-
-    }).observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
+    window.ab${testNumber}
+      .waitForElement("") // UPDATE SELECTOR
+      .then((pageContainer) => {
+        // EXPERIMENT RELATE CHANGES
+        
+      }
   });
 
 try {
   if (document.body == null) {
-    document.addEventListener("DOMContentLoaded", window.ab${testNumber}.dynamic);
+    document.addEventListener("DOMContentLoaded", window.ab${testNumber}.init);
   } else {
-    window.ab${testNumber}.dynamic();
+    window.ab${testNumber}.init();
   }
 } catch (error) {
   console.error("ab${testNumber}:", error);
@@ -102,10 +104,14 @@ try {
     if (!fs.existsSync(folderName)) {
       fs.mkdirSync(folderName, { recursive: true });
       fs.writeFileSync(`${folderName}/main.js`, content);
+      fs.writeFileSync(
+        `${folderName}/tamperMonkeyScript.js`,
+        tamperMonkeyContent
+      );
     }
   } catch (err) {
     console.error("Error: ", err);
   }
 });
 
-LOG_MAGENTA("***** FILE GENERATED *******");
+LOG_MAGENTA("***** FILES GENERATED *******");
