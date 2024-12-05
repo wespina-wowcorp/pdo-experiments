@@ -46,7 +46,7 @@ const variantArray = [...Array(variants).keys()];
 variantArray.forEach((variant) => {
   const variantNumber = variant + 1;
   const folderName = `${testId.trim()}/Variant-${variantNumber}`;
-  const testNumber = testId.match(/(AB|AA)-(.*)/)?.[1];
+  const testNumber = testId.match(/(AB|AA)-(.*)/)?.[2];
 
   if (!testNumber) {
     throw new Error('Test ID must start with "AB-"');
