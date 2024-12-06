@@ -4,6 +4,13 @@ This repo is a collection of custom JS and CSS used within the Product Discovery
 
 The PDO team have a [Confluence page](https://woolworths-agile.atlassian.net/wiki/spaces/DAOPC/pages/32435375110/Product+Discovery+and+Optimisation) with details about the scope of works and how Optimizely experiments are used and built.
 
+## Documentation
+
+[Experimentation (A/B Testing)](https://woolworths-agile.atlassian.net/wiki/x/QYlkjQc)
+
+[Experimentation Process Overview](https://woolworths-agile.atlassian.net/wiki/x/WYkAjgc)
+
+[Build Process](https://woolworths-agile.atlassian.net/wiki/x/vQUqjgc)
 
 ## Workflow
 
