@@ -1,24 +1,24 @@
-# Workflow
+# Product Discovery and Optimisation Optimizely Experiments
 
-1. Open TamperMonkey, create new script
-2. Create test folder and main `js` file e.g.: `C:\Users\1442718\Development\overrides\AB-164\Variant 2\main.js`
-3. Add this comment and fill in details:
+This repo is a collection of custom JS and CSS used within the Product Discovery and Optimisation (PDO) team's Web Experiments within [Optimizely](https://www.optimizely.com/).
 
-```js
-// ==UserScript==
-// @name         AB-{{test number}}: Variant 1
-// @namespace    http://tampermonkey.net/
-// @version      AB-{{test number}}_variant_2
-// @description  {{description of the test}}
-// @author       Wilson
-// @match        https://www.woolworths.co.nz/*
-// @require      file://{{file path}} - EXAMPLE: file://C:\Users\1442718\Development\overrides\AB-164\Variant 2\main.js
-// ==/UserScript==
+The PDO team have a [Confluence page](https://woolworths-agile.atlassian.net/wiki/spaces/DAOPC/pages/32435375110/Product+Discovery+and+Optimisation) with details about the scope of works and how Optimizely experiments are used and built.
+
+
+## Workflow
+
+1. Generate a new experiment:
+```bash
+npm run generate
 ```
+2. Add the following when prompted:
+  - Experiment id: e.g.`AB-010`
+  - Number of variants (not including Control):  e.g. `2`
+  - Test description: e.g.: `Homepage new ad banner`
+  - URL for the experiment: e.g. `https://www.woolworths.co.nz/`
+  - Any more URLs? e.g. `n`
 
-4. Add the same script to `main.js` file and add custom JS below comment.
-
-## How to
+## How To's
 
 ### Add CSS to tampermonkey script
 
